@@ -1,500 +1,966 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Animador Web V2</title>
+<title>Animador Web V2.1</title>
 
 <style>
+
 * {
-  box-sizing: border-box;
+box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: white;
+margin: 0;
+font-family: Arial, sans-serif;
+background: #111827;
+color: white;
 }
 
 header {
-  background: #1e293b;
-  padding: 16px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  position: sticky;
-  top: 0;
-  z-index: 20;
+padding: 16px;
+text-align: center;
+background: #1f2937;
+font-size: 22px;
+font-weight: bold;
 }
 
 .container {
-  width: 100%;
-  max-width: 1100px;
-  margin: auto;
-  padding: 15px;
+max-width: 900px;
+margin: auto;
+padding: 20px;
 }
 
-/* PREVIEW */
-
 .preview {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 16px;
-  background:
-    linear-gradient(
-      #60a5fa 0%,
-      #60a5fa 65%,
-      #65a30d 65%,
-      #65a30d 100%
-    );
-  border: 2px solid #334155;
+position: relative;
+width: 100%;
+aspect-ratio: 16 / 9;
+overflow: hidden;
+border-radius: 15px;
+
+background:
+linear-gradient(
+#60a5fa 0%,
+#60a5fa 65%,
+#65a30d 65%,
+#65a30d 100%
+);
 }
 
 .sun {
-  position: absolute;
-  top: 4%;
-  right: 5%;
-  font-size: clamp(35px, 7vw, 65px);
+position: absolute;
+top: 25px;
+right: 40px;
+font-size: 55px;
 }
 
 .house {
-  position: absolute;
-  bottom: 13%;
-  left: 40%;
-  font-size: clamp(60px, 12vw, 110px);
+position: absolute;
+bottom: 14%;
+left: 40%;
+font-size: 100px;
 }
 
 .tree {
-  position: absolute;
-  bottom: 13%;
-  right: 8%;
-  font-size: clamp(55px, 10vw, 90px);
+position: absolute;
+bottom: 14%;
+right: 10%;
+font-size: 85px;
 }
 
 .character {
-  position: absolute;
-  bottom: 13%;
-  left: 15%;
-  font-size: clamp(55px, 10vw, 90px);
-  transition: left 0.4s ease;
-  z-index: 5;
+position: absolute;
+bottom: 14%;
+left: 15%;
+font-size: 85px;
+transition: left 0.4s ease;
 }
 
 .dialogue {
-  position: absolute;
-  left: 50%;
-  bottom: 3%;
-  transform: translateX(-50%);
-  width: 76%;
-  padding: 10px 14px;
-  background: white;
-  color: #111827;
-  border-radius: 14px;
-  text-align: center;
-  font-weight: bold;
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  word-break: break-word;
+position: absolute;
+bottom: 5%;
+left: 50%;
+transform: translateX(-50%);
+width: 70%;
+padding: 12px;
+background: white;
+color: #111827;
+border-radius: 14px;
+text-align: center;
+font-weight: bold;
 }
 
-/* CONTROLES */
-
 .controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin: 15px 0;
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+justify-content: center;
+margin: 20px 0;
 }
 
 button {
-  border: 0;
-  padding: 11px 14px;
-  border-radius: 9px;
-  background: #2563eb;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
+border: 0;
+padding: 12px 16px;
+border-radius: 8px;
+background: #2563eb;
+color: white;
+font-size: 15px;
+cursor: pointer;
 }
 
 button:hover {
-  background: #1d4ed8;
+background: #1d4ed8;
 }
 
-button.secondary {
-  background: #475569;
+button.red {
+background: #dc2626;
 }
 
-button.secondary:hover {
-  background: #334155;
+button.green {
+background: #16a34a;
 }
 
-button.danger {
-  background: #dc2626;
+button.gray {
+background: #475569;
 }
-
-button.danger:hover {
-  background: #b91c1c;
-}
-
-button.success {
-  background: #16a34a;
-}
-
-button.success:hover {
-  background: #15803d;
-}
-
-/* PAINÉIS */
 
 .panel {
-  background: #1e293b;
-  padding: 16px;
-  border-radius: 14px;
-  margin-top: 15px;
-}
-
-.panel h2 {
-  margin-top: 0;
-  font-size: 19px;
+background: #1f2937;
+padding: 20px;
+border-radius: 12px;
+margin-top: 15px;
 }
 
 label {
-  display: block;
-  margin: 13px 0 6px;
-  font-weight: bold;
+display: block;
+margin: 15px 0 6px;
 }
 
 textarea,
 select,
-input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #475569;
-  background: #0f172a;
-  color: white;
-  font-size: 15px;
-}
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
+input {
+width: 100%;
+padding: 10px;
+border-radius: 8px;
+border: 1px solid #475569;
+background: #111827;
+color: white;
 }
 
 .characters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
 }
 
 .characterButton {
-  font-size: 27px;
-  background: #334155;
-  min-width: 52px;
+font-size: 28px;
+background: #374151;
 }
 
-.characterButton.active {
-  background: #2563eb;
-  outline: 2px solid #93c5fd;
+.scenes {
+display: flex;
+gap: 10px;
+overflow-x: auto;
+padding: 10px 0;
 }
 
-/* TIMELINE */
-
-.timeline {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 8px 3px 12px;
-  min-height: 82px;
+.scene {
+min-width: 100px;
+padding: 12px;
+background: #374151;
+border-radius: 10px;
+text-align: center;
+cursor: pointer;
+border: 2px solid transparent;
 }
 
-.sceneCard {
-  min-width: 120px;
-  background: #334155;
-  border-radius: 10px;
-  padding: 9px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  flex-shrink: 0;
+.scene.active {
+border-color: #60a5fa;
+background: #1d4ed8;
 }
 
-.sceneCard.active {
-  border-color: #60a5fa;
-  background: #1d4ed8;
+.sceneEmoji {
+font-size: 30px;
 }
-
-.sceneNumber {
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.scenePreview {
-  font-size: 31px;
-  margin: 8px 0;
-}
-
-.sceneText {
-  font-size: 12px;
-  color: #e2e8f0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* DURAÇÃO */
-
-.durationBox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.durationBox input {
-  width: 100px;
-}
-
-/* STATUS */
 
 .status {
-  text-align: center;
-  margin-top: 12px;
-  color: #86efac;
-  min-height: 20px;
+text-align: center;
+margin-top: 15px;
+color: #86efac;
+min-height: 20px;
 }
 
-/* INFO */
-
-.info {
-  color: #cbd5e1;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-  header {
-    font-size: 19px;
-  }
-
-  .container {
-    padding: 10px;
-  }
-
-  .panel {
-    padding: 12px;
-  }
-
-  button {
-    flex: 1 1 auto;
-  }
-
-  .dialogue {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-}
 </style>
+
 </head>
 
 <body>
 
 <header>
-🎬 Animador Web V2
+
+🎬 Animador Web V2.1
+
 </header>
+
 
 <div class="container">
 
-  <!-- PREVIEW -->
 
-  <div class="preview" id="preview">
+<!-- PREVIEW -->
 
-    <div class="sun" id="sun">☀️</div>
+<div class="preview" id="preview">
 
-    <div class="house" id="house">🏠</div>
+<div class="sun" id="sun">
+☀️
+</div>
 
-    <div class="tree" id="tree">🌳</div>
+<div class="house" id="house">
+🏠
+</div>
 
-    <div class="character" id="character">
-      👨
-    </div>
+<div class="tree" id="tree">
+🌳
+</div>
 
-    <div class="dialogue" id="dialogue">
-      Olá! Bem-vindo ao meu vídeo!
-    </div>
+<div class="character" id="character">
+👨
+</div>
 
-  </div>
+<div class="dialogue" id="dialogue">
+Olá! Bem-vindo ao meu vídeo!
+</div>
 
-  <!-- CONTROLES -->
-
-  <div class="controls">
-
-    <button onclick="moverEsquerda()">
-      ⬅️ Esquerda
-    </button>
-
-    <button onclick="moverDireita()">
-      ➡️ Direita
-    </button>
-
-    <button onclick="animarCena()">
-      🎬 Animar
-    </button>
-
-    <button class="secondary" onclick="pararAnimacao()">
-      ⏹️ Parar
-    </button>
-
-    <button class="success" onclick="reproduzirProjeto()">
-      ▶️ Reproduzir tudo
-    </button>
-
-    <button class="secondary" onclick="pararProjeto()">
-      ⏹️ Parar projeto
-    </button>
-
-  </div>
-
-  <!-- TIMELINE -->
-
-  <div class="panel">
-
-    <h2>🎞️ Timeline</h2>
-
-    <div class="timeline" id="timeline"></div>
-
-    <div class="controls">
-
-      <button onclick="adicionarCena()">
-        ➕ Nova cena
-      </button>
-
-      <button class="danger" onclick="excluirCena()">
-        🗑️ Excluir cena
-      </button>
-
-    </div>
-
-  </div>
-
-  <!-- EDITOR -->
-
-  <div class="panel">
-
-    <h2>⚙️ Editor da cena</h2>
-
-    <label>Texto da fala</label>
-
-    <textarea
-      id="texto"
-      oninput="mudarTexto()"
-    >Olá! Bem-vindo ao meu vídeo!</textarea>
+</div>
 
 
-    <label>Escolha um personagem</label>
+<!-- MOVIMENTO -->
 
-    <div class="characters">
+<div class="controls">
 
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('👨')"
-      >👨</button>
+<button onclick="moverEsquerda()">
+⬅️ Esquerda
+</button>
 
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('👩')"
-      >👩</button>
+<button onclick="moverDireita()">
+➡️ Direita
+</button>
 
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('🧒')"
-      >🧒</button>
+<button onclick="animar()">
+🎬 Animar
+</button>
 
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('👴')"
-      >👴</button>
+<button class="gray" onclick="parar()">
+⏹️ Parar
+</button>
 
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('👵')"
-      >👵</button>
-
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('🐶')"
-      >🐶</button>
-
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('🐱')"
-      >🐱</button>
-
-      <button
-        class="characterButton"
-        onclick="mudarPersonagem('🐼')"
-      >🐼</button>
-
-    </div>
+</div>
 
 
-    <label>Cenário</label>
+<!-- CENAS -->
 
-    <select
-      id="cenario"
-      onchange="mudarCenario()"
-    >
+<div class="panel">
 
-      <option value="casa">🏠 Casa</option>
-      <option value="parque">🌳 Parque</option>
-      <option value="cidade">🏙️ Cidade</option>
-      <option value="espaco">🚀 Espaço</option>
-      <option value="praia">🏖️ Praia</option>
-      <option value="floresta">🌲 Floresta</option>
+<h2>
+🎞️ Cenas
+</h2>
 
-    </select>
+<div class="scenes" id="scenes">
 
+</div>
 
-    <label>Duração da cena</label>
+<div class="controls">
 
-    <div class="durationBox">
+<button class="green" onclick="novaCena()">
+➕ Nova cena
+</button>
 
-      <input
-        type="number"
-        id="duracao"
-        min="1"
-        max="30"
-        step="1"
-        value="5"
-        onchange="mudarDuracao()"
-      >
+<button class="red" onclick="excluirCena()">
+🗑️ Excluir cena
+</button>
 
-      <span>segundos</span>
+</div>
 
-    </div>
+</div>
 
 
-    <div class="status" id="status">
-      ✅ Editor funcionando
-    </div>
+<!-- EDITOR -->
 
-  </div>
+<div class="panel">
 
-  <!-- SALVAMENTO -->
+<h2>
+⚙️ Editor
+</h2>
 
-  <div class="panel">
 
-    <h2>💾 Projeto</h2>
+<label>
+Texto da fala
+</label>
 
-    <p class="info">
-      O projeto
+<textarea
+id="texto"
+oninput="mudarTexto()"
+>Olá! Bem-vindo ao meu vídeo!</textarea>
+
+
+<label>
+Personagem
+</label>
+
+<div class="characters">
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('👨')">
+👨
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('👩')">
+👩
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🧒')">
+🧒
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🐶')">
+🐶
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🐱')">
+🐱
+</button>
+
+</div>
+
+
+<label>
+Cenário
+</label>
+
+<select
+id="cenario"
+onchange="mudarCenario()">
+
+<option value="casa">
+🏠 Casa
+</option>
+
+<option value="parque">
+🌳 Parque
+</option>
+
+<option value="cidade">
+🏙️ Cidade
+</option>
+
+<option value="espaco">
+🚀 Espaço
+</option>
+
+</select>
+
+
+<label>
+Duração da cena (segundos)
+</label>
+
+<input
+type="number"
+id="duracao"
+value="5"
+min="1"
+max="30"
+onchange="mudarDuracao()">
+
+
+<div class="status" id="status">
+
+✅ V2.1 funcionando
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* ================================
+   PROJETO
+================================ */
+
+let cenas = [
+
+{
+personagem: "👨",
+cenario: "casa",
+texto: "Olá! Bem-vindo ao meu vídeo!",
+duracao: 5,
+posicao: 15
+}
+
+];
+
+let cenaAtual = 0;
+
+let animacao = null;
+
+
+/* ================================
+   ELEMENTOS
+================================ */
+
+const character =
+document.getElementById("character");
+
+const dialogue =
+document.getElementById("dialogue");
+
+const texto =
+document.getElementById("texto");
+
+const cenario =
+document.getElementById("cenario");
+
+const duracao =
+document.getElementById("duracao");
+
+const preview =
+document.getElementById("preview");
+
+const house =
+document.getElementById("house");
+
+const tree =
+document.getElementById("tree");
+
+const sun =
+document.getElementById("sun");
+
+const status =
+document.getElementById("status");
+
+const scenes =
+document.getElementById("scenes");
+
+
+/* ================================
+   ATUALIZAR CENA
+================================ */
+
+function atualizarCena() {
+
+let cena = cenas[cenaAtual];
+
+character.textContent =
+cena.personagem;
+
+character.style.left =
+cena.posicao + "%";
+
+dialogue.textContent =
+cena.texto;
+
+texto.value =
+cena.texto;
+
+cenario.value =
+cena.cenario;
+
+duracao.value =
+cena.duracao;
+
+aplicarCenario(cena.cenario);
+
+mostrarCenas();
+
+}
+
+
+/* ================================
+   TEXTO
+================================ */
+
+function mudarTexto() {
+
+cenas[cenaAtual].texto =
+texto.value;
+
+dialogue.textContent =
+texto.value;
+
+mostrarCenas();
+
+}
+
+
+/* ================================
+   PERSONAGEM
+================================ */
+
+function mudarPersonagem(personagem) {
+
+cenas[cenaAtual].personagem =
+personagem;
+
+character.textContent =
+personagem;
+
+status.textContent =
+"👤 Personagem alterado";
+
+mostrarCenas();
+
+}
+
+
+/* ================================
+   ESQUERDA
+================================ */
+
+function moverEsquerda() {
+
+cenas[cenaAtual].posicao -= 5;
+
+if (
+cenas[cenaAtual].posicao < 0
+) {
+
+cenas[cenaAtual].posicao = 0;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+status.textContent =
+"⬅️ Personagem movido";
+
+}
+
+
+/* ================================
+   DIREITA
+================================ */
+
+function moverDireita() {
+
+cenas[cenaAtual].posicao += 5;
+
+if (
+cenas[cenaAtual].posicao > 85
+) {
+
+cenas[cenaAtual].posicao = 85;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+status.textContent =
+"➡️ Personagem movido";
+
+}
+
+
+/* ================================
+   ANIMAÇÃO
+================================ */
+
+function animar() {
+
+parar();
+
+animacao =
+setInterval(function() {
+
+cenas[cenaAtual].posicao += 3;
+
+if (
+cenas[cenaAtual].posicao > 85
+) {
+
+cenas[cenaAtual].posicao = 0;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+}, 200);
+
+status.textContent =
+"▶️ Animando";
+
+}
+
+
+/* ================================
+   PARAR
+================================ */
+
+function parar() {
+
+if (
+animacao !== null
+) {
+
+clearInterval(animacao);
+
+animacao = null;
+
+}
+
+status.textContent =
+"⏹️ Parado";
+
+}
+
+
+/* ================================
+   CENÁRIO
+================================ */
+
+function mudarCenario() {
+
+cenas[cenaAtual].cenario =
+cenario.value;
+
+aplicarCenario(
+cenario.value
+);
+
+mostrarCenas();
+
+}
+
+
+/* ================================
+   APLICAR CENÁRIO
+================================ */
+
+function aplicarCenario(tipo) {
+
+
+if (
+tipo === "casa"
+) {
+
+preview.style.background =
+"linear-gradient(#60a5fa 0%, #60a5fa 65%, #65a30d 65%, #65a30d 100%)";
+
+house.style.display =
+"block";
+
+tree.style.display =
+"block";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "parque"
+) {
+
+preview.style.background =
+"linear-gradient(#38bdf8 0%, #38bdf8 65%, #4d7c0f 65%, #4d7c0f 100%)";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"block";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "cidade"
+) {
+
+preview.style.background =
+"linear-gradient(#64748b 0%, #64748b 65%, #334155 65%, #334155 100%)";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"none";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "espaco"
+) {
+
+preview.style.background =
+"#020617";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"none";
+
+sun.style.display =
+"none";
+
+}
+
+}
+
+
+/* ================================
+   DURAÇÃO
+================================ */
+
+function mudarDuracao() {
+
+let valor =
+parseInt(duracao.value);
+
+if (
+isNaN(valor)
+) {
+
+valor = 5;
+
+}
+
+if (
+valor < 1
+) {
+
+valor = 1;
+
+}
+
+if (
+valor > 30
+) {
+
+valor = 30;
+
+}
+
+duracao.value =
+valor;
+
+cenas[cenaAtual].duracao =
+valor;
+
+status.textContent =
+"⏱️ Duração alterada";
+
+}
+
+
+/* ================================
+   MOSTRAR CENAS
+================================ */
+
+function mostrarCenas() {
+
+scenes.innerHTML = "";
+
+
+for (
+let i = 0;
+i < cenas.length;
+i++
+) {
+
+let cena =
+document.createElement("div");
+
+cena.className =
+"scene";
+
+
+if (
+i === cenaAtual
+) {
+
+cena.classList.add(
+"active"
+);
+
+}
+
+
+cena.innerHTML =
+
+"<div class='sceneEmoji'>" +
+cenas[i].personagem +
+"</div>" +
+
+"<strong>Cena " +
+(i + 1) +
+"</strong>" +
+
+"<br>" +
+
+"<small>" +
+cenas[i].duracao +
+"s</small>";
+
+
+cena.onclick =
+function() {
+
+selecionarCena(i);
+
+};
+
+
+scenes.appendChild(
+cena
+);
+
+}
+
+}
+
+
+/* ================================
+   SELECIONAR CENA
+================================ */
+
+function selecionarCena(numero) {
+
+parar();
+
+cenaAtual =
+numero;
+
+atualizarCena();
+
+status.textContent =
+"🎬 Cena " +
+(numero + 1) +
+" selecionada";
+
+}
+
+
+/* ================================
+   NOVA CENA
+================================ */
+
+function novaCena() {
+
+let nova = {
+
+personagem:
+cenas[cenaAtual].personagem,
+
+cenario:
+cenas[cenaAtual].cenario,
+
+texto:
+"Nova cena",
+
+duracao:
+5,
+
+posicao:
+15
+
+};
+
+
+cenas.push(nova);
+
+cenaAtual =
+cenas.length - 1;
+
+atualizarCena();
+
+status.textContent =
+"➕ Nova cena criada";
+
+}
+
+
+/* ================================
+   EXCLUIR
+================================ */
+
+function excluirCena() {
+
+if (
+cenas.length === 1
+) {
+
+alert(
+"O projeto precisa ter pelo menos uma cena."
+);
+
+return;
+
+}
+
+
+cenas.splice(
+cenaAtual,
+1
+);
+
+
+if (
+cenaAtual >= cenas.length
+) {
+
+cenaAtual =
+cenas.length - 1;
+
+}
+
+
+atualizarCena();
+
+status.textContent =
+"🗑️ Cena excluída";
+
+}
+
+
+/* ================================
+   INICIAR
+================================ */
+
+atualizarCena();
+
+</script>
+
+</body>
+
+</html>
