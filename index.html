@@ -1,17 +1,1176 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Teste</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Animador Web V2</title>
+
+<style>
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #111827;
+color: white;
+}
+
+header {
+padding: 16px;
+text-align: center;
+background: #1f2937;
+font-size: 22px;
+font-weight: bold;
+}
+
+.container {
+max-width: 900px;
+margin: auto;
+padding: 20px;
+}
+
+.preview {
+position: relative;
+width: 100%;
+aspect-ratio: 16 / 9;
+overflow: hidden;
+border-radius: 15px;
+
+background: linear-gradient(
+#60a5fa 0%,
+#60a5fa 65%,
+#65a30d 65%,
+#65a30d 100%
+);
+}
+
+.sun {
+position: absolute;
+top: 25px;
+right: 40px;
+font-size: 55px;
+}
+
+.house {
+position: absolute;
+bottom: 14%;
+left: 40%;
+font-size: 100px;
+}
+
+.tree {
+position: absolute;
+bottom: 14%;
+right: 10%;
+font-size: 85px;
+}
+
+.character {
+position: absolute;
+bottom: 14%;
+left: 15%;
+font-size: 85px;
+transition: left 0.4s ease;
+}
+
+.dialogue {
+position: absolute;
+bottom: 5%;
+left: 50%;
+transform: translateX(-50%);
+width: 70%;
+padding: 12px;
+background: white;
+color: #111827;
+border-radius: 14px;
+text-align: center;
+font-weight: bold;
+}
+
+.controls {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+justify-content: center;
+margin: 20px 0;
+}
+
+button {
+border: 0;
+padding: 12px 16px;
+border-radius: 8px;
+background: #2563eb;
+color: white;
+font-size: 15px;
+cursor: pointer;
+}
+
+button:hover {
+background: #1d4ed8;
+}
+
+button.green {
+background: #16a34a;
+}
+
+button.red {
+background: #dc2626;
+}
+
+button.gray {
+background: #475569;
+}
+
+.panel {
+background: #1f2937;
+padding: 20px;
+border-radius: 12px;
+margin-top: 15px;
+}
+
+label {
+display: block;
+margin: 15px 0 6px;
+}
+
+textarea,
+select,
+input {
+width: 100%;
+padding: 10px;
+border-radius: 8px;
+border: 1px solid #475569;
+background: #111827;
+color: white;
+}
+
+.characters {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+}
+
+.characterButton {
+font-size: 28px;
+background: #374151;
+}
+
+.timeline {
+display: flex;
+gap: 10px;
+overflow-x: auto;
+padding: 10px 0;
+}
+
+.scene {
+min-width: 110px;
+padding: 12px;
+background: #374151;
+border-radius: 10px;
+text-align: center;
+cursor: pointer;
+border: 2px solid transparent;
+}
+
+.scene.active {
+border-color: #60a5fa;
+background: #1d4ed8;
+}
+
+.sceneEmoji {
+font-size: 30px;
+margin-bottom: 5px;
+}
+
+.sceneText {
+font-size: 12px;
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+
+.status {
+text-align: center;
+margin-top: 15px;
+color: #86efac;
+min-height: 20px;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<h1>TESTE DO ANIMADOR</h1>
 
-<button onclick="alert('FUNCIONOU!')">
-  TESTAR BOTÃO
+<header>
+
+🎬 Animador Web V2
+
+</header>
+
+
+<div class="container">
+
+
+<!-- PREVIEW -->
+
+<div class="preview" id="preview">
+
+<div class="sun" id="sun">
+☀️
+</div>
+
+<div class="house" id="house">
+🏠
+</div>
+
+<div class="tree" id="tree">
+🌳
+</div>
+
+<div class="character" id="character">
+👨
+</div>
+
+<div class="dialogue" id="dialogue">
+Olá! Bem-vindo ao meu vídeo!
+</div>
+
+</div>
+
+
+<!-- CONTROLES -->
+
+<div class="controls">
+
+<button onclick="moverEsquerda()">
+⬅️ Esquerda
 </button>
 
+<button onclick="moverDireita()">
+➡️ Direita
+</button>
+
+<button onclick="animar()">
+🎬 Animar
+</button>
+
+<button class="gray" onclick="parar()">
+⏹️ Parar
+</button>
+
+</div>
+
+
+<!-- TIMELINE -->
+
+<div class="panel">
+
+<h2>
+🎞️ Timeline
+</h2>
+
+<div class="timeline" id="timeline">
+</div>
+
+<div class="controls">
+
+<button class="green" onclick="adicionarCena()">
+➕ Nova cena
+</button>
+
+<button class="red" onclick="excluirCena()">
+🗑️ Excluir cena
+</button>
+
+</div>
+
+</div>
+
+
+<!-- EDITOR -->
+
+<div class="panel">
+
+<h2>
+⚙️ Editor
+</h2>
+
+
+<label>
+Texto da fala
+</label>
+
+<textarea
+id="texto"
+oninput="mudarTexto()"
+>Olá! Bem-vindo ao meu vídeo!</textarea>
+
+
+<label>
+Escolha um personagem
+</label>
+
+
+<div class="characters">
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('👨')">
+👨
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('👩')">
+👩
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🧒')">
+🧒
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🐶')">
+🐶
+</button>
+
+<button
+class="characterButton"
+onclick="mudarPersonagem('🐱')">
+🐱
+</button>
+
+</div>
+
+
+<label>
+Cenário
+</label>
+
+
+<select
+id="cenario"
+onchange="mudarCenario()">
+
+<option value="casa">
+🏠 Casa
+</option>
+
+<option value="parque">
+🌳 Parque
+</option>
+
+<option value="cidade">
+🏙️ Cidade
+</option>
+
+<option value="espaco">
+🚀 Espaço
+</option>
+
+</select>
+
+
+<label>
+Duração da cena
+</label>
+
+
+<input
+id="duracao"
+type="number"
+min="1"
+max="30"
+value="5"
+onchange="mudarDuracao()"
+>
+
+
+<div class="status" id="status">
+
+✅ V2 funcionando
+
+</div>
+
+</div>
+
+
+<!-- REPRODUÇÃO -->
+
+<div class="panel">
+
+<h2>
+▶️ Reprodução
+</h2>
+
+<div class="controls">
+
+<button
+class="green"
+onclick="reproduzir()">
+
+▶️ Reproduzir projeto
+
+</button>
+
+
+<button
+class="gray"
+onclick="pararProjeto()">
+
+⏹️ Parar projeto
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- SALVAR -->
+
+<div class="panel">
+
+<h2>
+💾 Projeto
+</h2>
+
+<div class="controls">
+
+<button
+class="green"
+onclick="salvarProjeto()">
+
+💾 Salvar
+
+</button>
+
+
+<button
+onclick="carregarProjeto()">
+
+📂 Carregar
+
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* ==========================
+   CENAS
+========================== */
+
+let cenas = [
+
+{
+personagem: "👨",
+cenario: "casa",
+texto: "Olá! Bem-vindo ao meu vídeo!",
+duracao: 5,
+posicao: 15
+}
+
+];
+
+
+let cenaAtual = 0;
+
+let animacao = null;
+
+let reproducao = null;
+
+
+/* ==========================
+   ELEMENTOS
+========================== */
+
+const preview =
+document.getElementById("preview");
+
+const character =
+document.getElementById("character");
+
+const dialogue =
+document.getElementById("dialogue");
+
+const texto =
+document.getElementById("texto");
+
+const cenario =
+document.getElementById("cenario");
+
+const duracao =
+document.getElementById("duracao");
+
+const timeline =
+document.getElementById("timeline");
+
+const status =
+document.getElementById("status");
+
+const house =
+document.getElementById("house");
+
+const tree =
+document.getElementById("tree");
+
+const sun =
+document.getElementById("sun");
+
+
+/* ==========================
+   ATUALIZAR CENA
+========================== */
+
+function atualizarCena() {
+
+let cena = cenas[cenaAtual];
+
+character.textContent =
+cena.personagem;
+
+character.style.left =
+cena.posicao + "%";
+
+dialogue.textContent =
+cena.texto;
+
+texto.value =
+cena.texto;
+
+cenario.value =
+cena.cenario;
+
+duracao.value =
+cena.duracao;
+
+aplicarCenario(
+cena.cenario
+);
+
+mostrarTimeline();
+
+}
+
+
+/* ==========================
+   TEXTO
+========================== */
+
+function mudarTexto() {
+
+cenas[cenaAtual].texto =
+texto.value;
+
+dialogue.textContent =
+texto.value;
+
+mostrarTimeline();
+
+}
+
+
+/* ==========================
+   PERSONAGEM
+========================== */
+
+function mudarPersonagem(personagem) {
+
+cenas[cenaAtual].personagem =
+personagem;
+
+character.textContent =
+personagem;
+
+mostrarTimeline();
+
+status.textContent =
+"👤 Personagem alterado";
+
+}
+
+
+/* ==========================
+   MOVIMENTO
+========================== */
+
+function moverEsquerda() {
+
+cenas[cenaAtual].posicao -= 5;
+
+if (
+cenas[cenaAtual].posicao < 0
+) {
+
+cenas[cenaAtual].posicao = 0;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+status.textContent =
+"⬅️ Personagem movido";
+
+}
+
+
+function moverDireita() {
+
+cenas[cenaAtual].posicao += 5;
+
+if (
+cenas[cenaAtual].posicao > 85
+) {
+
+cenas[cenaAtual].posicao = 85;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+status.textContent =
+"➡️ Personagem movido";
+
+}
+
+
+/* ==========================
+   ANIMAÇÃO
+========================== */
+
+function animar() {
+
+parar();
+
+animacao =
+setInterval(function() {
+
+cenas[cenaAtual].posicao += 3;
+
+if (
+cenas[cenaAtual].posicao > 85
+) {
+
+cenas[cenaAtual].posicao = 0;
+
+}
+
+character.style.left =
+cenas[cenaAtual].posicao + "%";
+
+}, 200);
+
+status.textContent =
+"▶️ Animação funcionando";
+
+}
+
+
+function parar() {
+
+if (
+animacao !== null
+) {
+
+clearInterval(animacao);
+
+animacao = null;
+
+}
+
+status.textContent =
+"⏹️ Animação parada";
+
+}
+
+
+/* ==========================
+   CENÁRIO
+========================== */
+
+function mudarCenario() {
+
+cenas[cenaAtual].cenario =
+cenario.value;
+
+aplicarCenario(
+cenario.value
+);
+
+mostrarTimeline();
+
+status.textContent =
+"🌎 Cenário alterado";
+
+}
+
+
+function aplicarCenario(tipo) {
+
+
+if (
+tipo === "casa"
+) {
+
+preview.style.background =
+"linear-gradient(#60a5fa 0%, #60a5fa 65%, #65a30d 65%, #65a30d 100%)";
+
+house.style.display =
+"block";
+
+tree.style.display =
+"block";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "parque"
+) {
+
+preview.style.background =
+"linear-gradient(#38bdf8 0%, #38bdf8 65%, #4d7c0f 65%, #4d7c0f 100%)";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"block";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "cidade"
+) {
+
+preview.style.background =
+"linear-gradient(#64748b 0%, #64748b 65%, #334155 65%, #334155 100%)";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"none";
+
+sun.style.display =
+"block";
+
+}
+
+
+if (
+tipo === "espaco"
+) {
+
+preview.style.background =
+"#020617";
+
+house.style.display =
+"none";
+
+tree.style.display =
+"none";
+
+sun.style.display =
+"none";
+
+}
+
+}
+
+
+/* ==========================
+   DURAÇÃO
+========================== */
+
+function mudarDuracao() {
+
+let valor =
+parseInt(duracao.value);
+
+if (
+isNaN(valor)
+) {
+
+valor = 5;
+
+}
+
+if (
+valor < 1
+) {
+
+valor = 1;
+
+}
+
+if (
+valor > 30
+) {
+
+valor = 30;
+
+}
+
+duracao.value =
+valor;
+
+cenas[cenaAtual].duracao =
+valor;
+
+mostrarTimeline();
+
+}
+
+
+/* ==========================
+   TIMELINE
+========================== */
+
+function mostrarTimeline() {
+
+timeline.innerHTML = "";
+
+
+for (
+let i = 0;
+i < cenas.length;
+i++
+) {
+
+let div =
+document.createElement("div");
+
+div.className =
+"scene";
+
+
+if (
+i === cenaAtual
+) {
+
+div.classList.add("active");
+
+}
+
+
+div.innerHTML =
+
+"<div class='sceneEmoji'>" +
+cenas[i].personagem +
+"</div>" +
+
+"<strong>Cena " +
+(i + 1) +
+"</strong>" +
+
+"<div class='sceneText'>" +
+cenas[i].texto +
+"</div>" +
+
+"<small>⏱️ " +
+cenas[i].duracao +
+"s</small>";
+
+
+div.onclick =
+function() {
+
+selecionarCena(i);
+
+};
+
+
+timeline.appendChild(div);
+
+}
+
+}
+
+
+/* ==========================
+   SELECIONAR CENA
+========================== */
+
+function selecionarCena(numero) {
+
+parar();
+
+pararProjeto();
+
+cenaAtual =
+numero;
+
+atualizarCena();
+
+status.textContent =
+"🎬 Cena " +
+(numero + 1) +
+" selecionada";
+
+}
+
+
+/* ==========================
+   NOVA CENA
+========================== */
+
+function adicionarCena() {
+
+let novaCena = {
+
+personagem:
+cenas[cenaAtual].personagem,
+
+cenario:
+cenas[cenaAtual].cenario,
+
+texto:
+"Nova cena",
+
+duracao:
+5,
+
+posicao:
+15
+
+};
+
+
+cenas.push(
+novaCena
+);
+
+cenaAtual =
+cenas.length - 1;
+
+atualizarCena();
+
+status.textContent =
+"➕ Nova cena criada";
+
+}
+
+
+/* ==========================
+   EXCLUIR CENA
+========================== */
+
+function excluirCena() {
+
+if (
+cenas.length === 1
+) {
+
+alert(
+"Você precisa ter pelo menos uma cena."
+);
+
+return;
+
+}
+
+
+cenas.splice(
+cenaAtual,
+1
+);
+
+
+if (
+cenaAtual >= cenas.length
+) {
+
+cenaAtual =
+cenas.length - 1;
+
+}
+
+
+atualizarCena();
+
+status.textContent =
+"🗑️ Cena excluída";
+
+}
+
+
+/* ==========================
+   REPRODUZIR
+========================== */
+
+function reproduzir() {
+
+pararProjeto();
+
+let indice = 0;
+
+function tocar() {
+
+if (
+indice >= cenas.length
+) {
+
+status.textContent =
+"✅ Projeto terminado";
+
+reproducao = null;
+
+return;
+
+}
+
+
+cenaAtual =
+indice;
+
+atualizarCena();
+
+status.textContent =
+"▶️ Reproduzindo cena " +
+(indice + 1);
+
+indice++;
+
+reproducao =
+setTimeout(
+tocar,
+cenas[cenaAtual - 1].duracao * 1000
+);
+
+}
+
+
+tocar();
+
+}
+
+
+function pararProjeto() {
+
+if (
+reproducao !== null
+) {
+
+clearTimeout(
+reproducao
+);
+
+reproducao = null;
+
+}
+
+status.textContent =
+"⏹️ Projeto parado";
+
+}
+
+
+/* ==========================
+   SALVAR
+========================== */
+
+function salvarProjeto() {
+
+localStorage.setItem(
+"animadorWeb",
+JSON.stringify(cenas)
+);
+
+status.textContent =
+"💾 Projeto salvo";
+
+}
+
+
+/* ==========================
+   CARREGAR
+========================== */
+
+function carregarProjeto() {
+
+let salvo =
+localStorage.getItem(
+"animadorWeb"
+);
+
+if (
+!salvo
+) {
+
+alert(
+"Nenhum projeto salvo."
+);
+
+return;
+
+}
+
+
+try {
+
+cenas =
+JSON.parse(salvo);
+
+cenaAtual = 0;
+
+atualizarCena();
+
+status.textContent =
+"📂 Projeto carregado";
+
+}
+
+catch {
+
+alert(
+"Erro ao carregar o projeto."
+);
+
+}
+
+}
+
+
+/* ==========================
+   INICIAR
+========================== */
+
+atualizarCena();
+
+</script>
+
+
 </body>
+
 </html>
