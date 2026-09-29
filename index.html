@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Animador Web</title>
+
+<title>Animador Web V2</title>
 
 <style>
 * {
@@ -13,96 +14,113 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #111827;
+  background: #0f172a;
   color: white;
 }
 
 header {
+  background: #1e293b;
   padding: 16px;
   text-align: center;
-  background: #1f2937;
   font-size: 22px;
   font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
 .container {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1100px;
   margin: auto;
-  padding: 20px;
+  padding: 15px;
 }
+
+/* PREVIEW */
 
 .preview {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 15px;
-  background: linear-gradient(
-    #60a5fa 0%,
-    #60a5fa 65%,
-    #65a30d 65%,
-    #65a30d 100%
-  );
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      #60a5fa 0%,
+      #60a5fa 65%,
+      #65a30d 65%,
+      #65a30d 100%
+    );
+  border: 2px solid #334155;
 }
 
 .sun {
   position: absolute;
-  top: 25px;
-  right: 40px;
-  font-size: 55px;
+  top: 4%;
+  right: 5%;
+  font-size: clamp(35px, 7vw, 65px);
 }
 
 .house {
   position: absolute;
-  bottom: 14%;
+  bottom: 13%;
   left: 40%;
-  font-size: 100px;
+  font-size: clamp(60px, 12vw, 110px);
 }
 
 .tree {
   position: absolute;
-  bottom: 14%;
-  right: 10%;
-  font-size: 85px;
+  bottom: 13%;
+  right: 8%;
+  font-size: clamp(55px, 10vw, 90px);
 }
 
 .character {
   position: absolute;
-  bottom: 14%;
+  bottom: 13%;
   left: 15%;
-  font-size: 85px;
+  font-size: clamp(55px, 10vw, 90px);
   transition: left 0.4s ease;
+  z-index: 5;
 }
 
 .dialogue {
   position: absolute;
-  bottom: 5%;
   left: 50%;
+  bottom: 3%;
   transform: translateX(-50%);
-  width: 70%;
-  padding: 12px;
+  width: 76%;
+  padding: 10px 14px;
   background: white;
   color: #111827;
   border-radius: 14px;
   text-align: center;
   font-weight: bold;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  word-break: break-word;
 }
+
+/* CONTROLES */
 
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin: 20px 0;
+  margin: 15px 0;
 }
 
 button {
   border: 0;
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 11px 14px;
+  border-radius: 9px;
   background: #2563eb;
   color: white;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -110,42 +128,181 @@ button:hover {
   background: #1d4ed8;
 }
 
+button.secondary {
+  background: #475569;
+}
+
+button.secondary:hover {
+  background: #334155;
+}
+
+button.danger {
+  background: #dc2626;
+}
+
+button.danger:hover {
+  background: #b91c1c;
+}
+
+button.success {
+  background: #16a34a;
+}
+
+button.success:hover {
+  background: #15803d;
+}
+
+/* PAINÉIS */
+
 .panel {
-  background: #1f2937;
-  padding: 20px;
-  border-radius: 12px;
+  background: #1e293b;
+  padding: 16px;
+  border-radius: 14px;
+  margin-top: 15px;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 19px;
 }
 
 label {
   display: block;
-  margin: 15px 0 6px;
+  margin: 13px 0 6px;
+  font-weight: bold;
 }
 
 textarea,
-select {
+select,
+input[type="number"] {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #475569;
-  background: #111827;
+  background: #0f172a;
   color: white;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
 .characters {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
 .characterButton {
-  font-size: 28px;
-  background: #374151;
+  font-size: 27px;
+  background: #334155;
+  min-width: 52px;
 }
+
+.characterButton.active {
+  background: #2563eb;
+  outline: 2px solid #93c5fd;
+}
+
+/* TIMELINE */
+
+.timeline {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 3px 12px;
+  min-height: 82px;
+}
+
+.sceneCard {
+  min-width: 120px;
+  background: #334155;
+  border-radius: 10px;
+  padding: 9px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  flex-shrink: 0;
+}
+
+.sceneCard.active {
+  border-color: #60a5fa;
+  background: #1d4ed8;
+}
+
+.sceneNumber {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.scenePreview {
+  font-size: 31px;
+  margin: 8px 0;
+}
+
+.sceneText {
+  font-size: 12px;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* DURAÇÃO */
+
+.durationBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.durationBox input {
+  width: 100px;
+}
+
+/* STATUS */
 
 .status {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 12px;
   color: #86efac;
+  min-height: 20px;
+}
+
+/* INFO */
+
+.info {
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  header {
+    font-size: 19px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  button {
+    flex: 1 1 auto;
+  }
+
+  .dialogue {
+    font-size: 12px;
+    padding: 8px;
+  }
+
 }
 </style>
 </head>
@@ -153,18 +310,20 @@ select {
 <body>
 
 <header>
-🎬 Animador Web
+🎬 Animador Web V2
 </header>
 
 <div class="container">
 
+  <!-- PREVIEW -->
+
   <div class="preview" id="preview">
 
-    <div class="sun">☀️</div>
+    <div class="sun" id="sun">☀️</div>
 
-    <div class="house">🏠</div>
+    <div class="house" id="house">🏠</div>
 
-    <div class="tree">🌳</div>
+    <div class="tree" id="tree">🌳</div>
 
     <div class="character" id="character">
       👨
@@ -176,6 +335,8 @@ select {
 
   </div>
 
+  <!-- CONTROLES -->
+
   <div class="controls">
 
     <button onclick="moverEsquerda()">
@@ -186,50 +347,142 @@ select {
       ➡️ Direita
     </button>
 
-    <button onclick="animar()">
+    <button onclick="animarCena()">
       🎬 Animar
     </button>
 
-    <button onclick="parar()">
+    <button class="secondary" onclick="pararAnimacao()">
       ⏹️ Parar
+    </button>
+
+    <button class="success" onclick="reproduzirProjeto()">
+      ▶️ Reproduzir tudo
+    </button>
+
+    <button class="secondary" onclick="pararProjeto()">
+      ⏹️ Parar projeto
     </button>
 
   </div>
 
+  <!-- TIMELINE -->
+
   <div class="panel">
 
-    <h2>⚙️ Editor</h2>
+    <h2>🎞️ Timeline</h2>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div class="controls">
+
+      <button onclick="adicionarCena()">
+        ➕ Nova cena
+      </button>
+
+      <button class="danger" onclick="excluirCena()">
+        🗑️ Excluir cena
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- EDITOR -->
+
+  <div class="panel">
+
+    <h2>⚙️ Editor da cena</h2>
 
     <label>Texto da fala</label>
 
-    <textarea id="texto" oninput="mudarTexto()">Olá! Bem-vindo ao meu vídeo!</textarea>
+    <textarea
+      id="texto"
+      oninput="mudarTexto()"
+    >Olá! Bem-vindo ao meu vídeo!</textarea>
+
 
     <label>Escolha um personagem</label>
 
     <div class="characters">
 
-      <button class="characterButton" onclick="mudarPersonagem('👨')">👨</button>
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('👨')"
+      >👨</button>
 
-      <button class="characterButton" onclick="mudarPersonagem('👩')">👩</button>
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('👩')"
+      >👩</button>
 
-      <button class="characterButton" onclick="mudarPersonagem('🧒')">🧒</button>
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('🧒')"
+      >🧒</button>
 
-      <button class="characterButton" onclick="mudarPersonagem('🐶')">🐶</button>
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('👴')"
+      >👴</button>
 
-      <button class="characterButton" onclick="mudarPersonagem('🐱')">🐱</button>
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('👵')"
+      >👵</button>
+
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('🐶')"
+      >🐶</button>
+
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('🐱')"
+      >🐱</button>
+
+      <button
+        class="characterButton"
+        onclick="mudarPersonagem('🐼')"
+      >🐼</button>
 
     </div>
 
+
     <label>Cenário</label>
 
-    <select id="cenario" onchange="mudarCenario()">
+    <select
+      id="cenario"
+      onchange="mudarCenario()"
+    >
 
       <option value="casa">🏠 Casa</option>
       <option value="parque">🌳 Parque</option>
       <option value="cidade">🏙️ Cidade</option>
       <option value="espaco">🚀 Espaço</option>
+      <option value="praia">🏖️ Praia</option>
+      <option value="floresta">🌲 Floresta</option>
 
     </select>
+
+
+    <label>Duração da cena</label>
+
+    <div class="durationBox">
+
+      <input
+        type="number"
+        id="duracao"
+        min="1"
+        max="30"
+        step="1"
+        value="5"
+        onchange="mudarDuracao()"
+      >
+
+      <span>segundos</span>
+
+    </div>
+
 
     <div class="status" id="status">
       ✅ Editor funcionando
@@ -237,119 +490,11 @@ select {
 
   </div>
 
-</div>
+  <!-- SALVAMENTO -->
 
-<script>
+  <div class="panel">
 
-let posicao = 15;
-let animacao = null;
+    <h2>💾 Projeto</h2>
 
-function mudarTexto() {
-
-  const texto = document.getElementById("texto").value;
-
-  document.getElementById("dialogue").textContent = texto;
-
-}
-
-function mudarPersonagem(personagem) {
-
-  document.getElementById("character").textContent = personagem;
-
-}
-
-function moverEsquerda() {
-
-  posicao -= 5;
-
-  if (posicao < 0) {
-    posicao = 0;
-  }
-
-  document.getElementById("character").style.left = posicao + "%";
-
-}
-
-function moverDireita() {
-
-  posicao += 5;
-
-  if (posicao > 85) {
-    posicao = 85;
-  }
-
-  document.getElementById("character").style.left = posicao + "%";
-
-}
-
-function animar() {
-
-  parar();
-
-  animacao = setInterval(function() {
-
-    posicao += 3;
-
-    if (posicao > 85) {
-      posicao = 0;
-    }
-
-    document.getElementById("character").style.left = posicao + "%";
-
-  }, 200);
-
-  document.getElementById("status").textContent =
-    "▶️ Animação funcionando";
-
-}
-
-function parar() {
-
-  if (animacao !== null) {
-    clearInterval(animacao);
-    animacao = null;
-  }
-
-  document.getElementById("status").textContent =
-    "⏹️ Animação parada";
-
-}
-
-function mudarCenario() {
-
-  const cenario = document.getElementById("cenario").value;
-  const preview = document.getElementById("preview");
-
-  if (cenario === "casa") {
-
-    preview.style.background =
-      "linear-gradient(#60a5fa 0%, #60a5fa 65%, #65a30d 65%, #65a30d 100%)";
-
-  }
-
-  if (cenario === "parque") {
-
-    preview.style.background =
-      "linear-gradient(#38bdf8 0%, #38bdf8 65%, #4d7c0f 65%, #4d7c0f 100%)";
-
-  }
-
-  if (cenario === "cidade") {
-
-    preview.style.background =
-      "linear-gradient(#64748b 0%, #64748b 65%, #334155 65%, #334155 100%)";
-
-  }
-
-  if (cenario === "espaco") {
-
-    preview.style.background = "#020617";
-
-  }
-
-}
-
-</script>
-
-</body>
-</html>
+    <p class="info">
+      O projeto
