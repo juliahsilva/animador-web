@@ -1,1176 +1,766 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Animador Web V2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animador Web V3</title>
 
 <style>
-
-* {
-box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
-margin: 0;
-font-family: Arial, sans-serif;
-background: #111827;
-color: white;
+  margin: 0;
+  background: #111827;
+  color: white;
+  font-family: Arial, sans-serif;
 }
 
 header {
-padding: 16px;
-text-align: center;
-background: #1f2937;
-font-size: 22px;
-font-weight: bold;
+  background: #1f2937;
+  text-align: center;
+  padding: 20px;
+  font-size: 23px;
+  font-weight: bold;
 }
 
 .container {
-max-width: 900px;
-margin: auto;
-padding: 20px;
-}
-
-.preview {
-position: relative;
-width: 100%;
-aspect-ratio: 16 / 9;
-overflow: hidden;
-border-radius: 15px;
-
-background: linear-gradient(
-#60a5fa 0%,
-#60a5fa 65%,
-#65a30d 65%,
-#65a30d 100%
-);
-}
-
-.sun {
-position: absolute;
-top: 25px;
-right: 40px;
-font-size: 55px;
-}
-
-.house {
-position: absolute;
-bottom: 14%;
-left: 40%;
-font-size: 100px;
-}
-
-.tree {
-position: absolute;
-bottom: 14%;
-right: 10%;
-font-size: 85px;
-}
-
-.character {
-position: absolute;
-bottom: 14%;
-left: 15%;
-font-size: 85px;
-transition: left 0.4s ease;
-}
-
-.dialogue {
-position: absolute;
-bottom: 5%;
-left: 50%;
-transform: translateX(-50%);
-width: 70%;
-padding: 12px;
-background: white;
-color: #111827;
-border-radius: 14px;
-text-align: center;
-font-weight: bold;
-}
-
-.controls {
-display: flex;
-flex-wrap: wrap;
-gap: 10px;
-justify-content: center;
-margin: 20px 0;
-}
-
-button {
-border: 0;
-padding: 12px 16px;
-border-radius: 8px;
-background: #2563eb;
-color: white;
-font-size: 15px;
-cursor: pointer;
-}
-
-button:hover {
-background: #1d4ed8;
-}
-
-button.green {
-background: #16a34a;
-}
-
-button.red {
-background: #dc2626;
-}
-
-button.gray {
-background: #475569;
+  max-width: 950px;
+  margin: auto;
+  padding: 15px;
 }
 
 .panel {
-background: #1f2937;
-padding: 20px;
-border-radius: 12px;
-margin-top: 15px;
+  background: #1f2937;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 18px 0;
 }
+
+h2 { font-size: 20px; }
 
 label {
-display: block;
-margin: 15px 0 6px;
+  display: block;
+  margin: 14px 0 7px;
 }
 
-textarea,
-select,
-input {
-width: 100%;
-padding: 10px;
-border-radius: 8px;
-border: 1px solid #475569;
-background: #111827;
-color: white;
+textarea, select, input {
+  width: 100%;
+  padding: 12px;
+  background: #111827;
+  color: white;
+  border: 1px solid #64748b;
+  border-radius: 9px;
+  font-size: 15px;
 }
 
-.characters {
-display: flex;
-gap: 10px;
-flex-wrap: wrap;
+textarea {
+  min-height: 110px;
+  resize: vertical;
 }
 
-.characterButton {
-font-size: 28px;
-background: #374151;
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 15px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:active { opacity: .75; }
+.green { background: #16a34a; }
+.red { background: #dc2626; }
+.gray { background: #475569; }
+.purple { background: #7c3aed; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(
+    #60a5fa 65%, #65a30d 65%
+  );
+}
+
+.decor {
+  position: absolute;
+  pointer-events: none;
+}
+
+#sun {
+  top: 5%;
+  right: 8%;
+  font-size: clamp(22px, 6vw, 55px);
+}
+
+#house {
+  bottom: 18%;
+  left: 40%;
+  font-size: clamp(40px, 11vw, 100px);
+}
+
+#tree {
+  bottom: 18%;
+  right: 9%;
+  font-size: clamp(35px, 9vw, 85px);
+}
+
+#character {
+  position: absolute;
+  bottom: 18%;
+  left: 15%;
+  font-size: clamp(36px, 9vw, 85px);
+  transition: left .15s linear;
+  z-index: 2;
+}
+
+#dialogue {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  padding: 9px;
+  border-radius: 12px;
+  background: white;
+  color: #111827;
+  text-align: center;
+  font-weight: bold;
+  font-size: clamp(11px, 2.5vw, 17px);
+  z-index: 3;
 }
 
 .timeline {
-display: flex;
-gap: 10px;
-overflow-x: auto;
-padding: 10px 0;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 12px 0;
 }
 
 .scene {
-min-width: 110px;
-padding: 12px;
-background: #374151;
-border-radius: 10px;
-text-align: center;
-cursor: pointer;
-border: 2px solid transparent;
+  flex: 0 0 115px;
+  background: #374151;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
 }
 
 .scene.active {
-border-color: #60a5fa;
-background: #1d4ed8;
+  background: #1d4ed8;
+  border-color: #93c5fd;
 }
 
-.sceneEmoji {
-font-size: 30px;
-margin-bottom: 5px;
-}
+.sceneEmoji { font-size: 32px; }
 
 .sceneText {
-font-size: 12px;
-overflow: hidden;
-white-space: nowrap;
-text-overflow: ellipsis;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 7px 0;
+}
+
+.characters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.characters button {
+  font-size: 25px;
+  background: #374151;
 }
 
 .status {
-text-align: center;
-margin-top: 15px;
-color: #86efac;
-min-height: 20px;
+  color: #86efac;
+  text-align: center;
+  min-height: 25px;
+  margin: 12px 0;
 }
 
+.hint {
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
 </style>
-
 </head>
-
 
 <body>
 
-
-<header>
-
-🎬 Animador Web V2
-
-</header>
-
+<header>🎬 Animador Web V3</header>
 
 <div class="container">
 
+<section class="panel">
+<h2>✨ Gerador automático</h2>
 
-<!-- PREVIEW -->
+<p>Escreva sua história. Separe os acontecimentos
+em frases para criar cenas diferentes.</p>
+
+<textarea id="historia">Um menino estava em casa.
+Ele caminhou até o parque.
+O menino encontrou um cachorro.
+O cachorro disse: Olá, amigo!
+O menino respondeu: Vamos brincar!</textarea>
+
+<div class="controls">
+<button class="purple" onclick="gerarAnimacao()">
+✨ Gerar animação
+</button>
+</div>
+
+<p class="hint">
+Dica: use palavras como menino, menina, cachorro,
+gato, casa, parque, cidade, espaço, caminhou,
+correu e disse.
+</p>
+</section>
+
+<section class="panel">
+<h2>🎥 Prévia</h2>
 
 <div class="preview" id="preview">
-
-<div class="sun" id="sun">
-☀️
-</div>
-
-<div class="house" id="house">
-🏠
-</div>
-
-<div class="tree" id="tree">
-🌳
-</div>
-
-<div class="character" id="character">
-👨
-</div>
-
-<div class="dialogue" id="dialogue">
-Olá! Bem-vindo ao meu vídeo!
-</div>
-
-</div>
-
-
-<!-- CONTROLES -->
-
-<div class="controls">
-
-<button onclick="moverEsquerda()">
-⬅️ Esquerda
-</button>
-
-<button onclick="moverDireita()">
-➡️ Direita
-</button>
-
-<button onclick="animar()">
-🎬 Animar
-</button>
-
-<button class="gray" onclick="parar()">
-⏹️ Parar
-</button>
-
-</div>
-
-
-<!-- TIMELINE -->
-
-<div class="panel">
-
-<h2>
-🎞️ Timeline
-</h2>
-
-<div class="timeline" id="timeline">
+<div class="decor" id="sun">☀️</div>
+<div class="decor" id="house">🏠</div>
+<div class="decor" id="tree">🌳</div>
+<div id="character">👨</div>
+<div id="dialogue">Olá! Bem-vindo!</div>
 </div>
 
 <div class="controls">
+<button onclick="mover(-5)">⬅️ Esquerda</button>
+<button onclick="mover(5)">➡️ Direita</button>
+<button onclick="animar()">🚶 Animar</button>
+<button class="gray" onclick="parar()">⏹️ Parar</button>
+</div>
 
+<div class="controls">
+<button class="green" onclick="reproduzir()">
+▶️ Reproduzir projeto
+</button>
+<button class="red" onclick="pararProjeto()">
+⏹️ Parar projeto
+</button>
+</div>
+
+<div class="status" id="status">
+✅ V3 iniciada
+</div>
+</section>
+
+<section class="panel">
+<h2>🎞️ Timeline</h2>
+
+<div class="timeline" id="timeline"></div>
+
+<div class="controls">
 <button class="green" onclick="adicionarCena()">
 ➕ Nova cena
 </button>
-
 <button class="red" onclick="excluirCena()">
 🗑️ Excluir cena
 </button>
-
 </div>
+</section>
 
-</div>
+<section class="panel">
+<h2>⚙️ Editor manual</h2>
 
+<label>Texto da cena</label>
+<textarea id="texto" oninput="mudarTexto()"></textarea>
 
-<!-- EDITOR -->
-
-<div class="panel">
-
-<h2>
-⚙️ Editor
-</h2>
-
-
-<label>
-Texto da fala
-</label>
-
-<textarea
-id="texto"
-oninput="mudarTexto()"
->Olá! Bem-vindo ao meu vídeo!</textarea>
-
-
-<label>
-Escolha um personagem
-</label>
-
-
+<label>Personagem</label>
 <div class="characters">
-
-<button
-class="characterButton"
-onclick="mudarPersonagem('👨')">
-👨
-</button>
-
-<button
-class="characterButton"
-onclick="mudarPersonagem('👩')">
-👩
-</button>
-
-<button
-class="characterButton"
-onclick="mudarPersonagem('🧒')">
-🧒
-</button>
-
-<button
-class="characterButton"
-onclick="mudarPersonagem('🐶')">
-🐶
-</button>
-
-<button
-class="characterButton"
-onclick="mudarPersonagem('🐱')">
-🐱
-</button>
-
+<button onclick="mudarPersonagem('👨')">👨</button>
+<button onclick="mudarPersonagem('👩')">👩</button>
+<button onclick="mudarPersonagem('🧒')">🧒</button>
+<button onclick="mudarPersonagem('🐶')">🐶</button>
+<button onclick="mudarPersonagem('🐱')">🐱</button>
+<button onclick="mudarPersonagem('👽')">👽</button>
 </div>
 
-
-<label>
-Cenário
-</label>
-
-
-<select
-id="cenario"
-onchange="mudarCenario()">
-
-<option value="casa">
-🏠 Casa
-</option>
-
-<option value="parque">
-🌳 Parque
-</option>
-
-<option value="cidade">
-🏙️ Cidade
-</option>
-
-<option value="espaco">
-🚀 Espaço
-</option>
-
+<label>Cenário</label>
+<select id="cenario" onchange="mudarCenario()">
+<option value="casa">🏠 Casa</option>
+<option value="parque">🌳 Parque</option>
+<option value="cidade">🏙️ Cidade</option>
+<option value="espaco">🚀 Espaço</option>
 </select>
 
+<label>Movimento</label>
+<select id="movimento" onchange="mudarMovimento()">
+<option value="parado">🧍 Parado</option>
+<option value="direita">➡️ Andar para direita</option>
+<option value="esquerda">⬅️ Andar para esquerda</option>
+<option value="correr">🏃 Correr</option>
+</select>
 
-<label>
-Duração da cena
-</label>
-
-
-<input
-id="duracao"
-type="number"
-min="1"
-max="30"
-value="5"
-onchange="mudarDuracao()"
->
-
-
-<div class="status" id="status">
-
-✅ V2 funcionando
-
-</div>
-
-</div>
-
-
-<!-- REPRODUÇÃO -->
-
-<div class="panel">
-
-<h2>
-▶️ Reprodução
-</h2>
+<label>Duração (segundos)</label>
+<input id="duracao" type="number" min="1"
+max="30" value="5" onchange="mudarDuracao()">
 
 <div class="controls">
-
-<button
-class="green"
-onclick="reproduzir()">
-
-▶️ Reproduzir projeto
-
-</button>
-
-
-<button
-class="gray"
-onclick="pararProjeto()">
-
-⏹️ Parar projeto
-
-</button>
-
-</div>
-
-</div>
-
-
-<!-- SALVAR -->
-
-<div class="panel">
-
-<h2>
-💾 Projeto
-</h2>
-
-<div class="controls">
-
-<button
-class="green"
-onclick="salvarProjeto()">
-
+<button class="green" onclick="salvarProjeto()">
 💾 Salvar
-
 </button>
-
-
-<button
-onclick="carregarProjeto()">
-
+<button onclick="carregarProjeto()">
 📂 Carregar
-
 </button>
+</div>
+</section>
 
 </div>
-
-</div>
-
-
-</div>
-
 
 <script>
+const $ = id => document.getElementById(id);
 
+const preview = $("preview");
+const character = $("character");
+const dialogue = $("dialogue");
+const statusEl = $("status");
 
-/* ==========================
-   CENAS
-========================== */
-
-let cenas = [
-
-{
-personagem: "👨",
-cenario: "casa",
-texto: "Olá! Bem-vindo ao meu vídeo!",
-duracao: 5,
-posicao: 15
+function novaCena(texto = "Nova cena") {
+  return {
+    personagem: "👨",
+    cenario: "casa",
+    texto,
+    duracao: 5,
+    posicao: 15,
+    movimento: "parado"
+  };
 }
 
-];
-
-
+let cenas = [novaCena("Olá! Bem-vindo ao meu vídeo!")];
 let cenaAtual = 0;
-
 let animacao = null;
-
 let reproducao = null;
+let token = 0;
 
-
-/* ==========================
-   ELEMENTOS
-========================== */
-
-const preview =
-document.getElementById("preview");
-
-const character =
-document.getElementById("character");
-
-const dialogue =
-document.getElementById("dialogue");
-
-const texto =
-document.getElementById("texto");
-
-const cenario =
-document.getElementById("cenario");
-
-const duracao =
-document.getElementById("duracao");
-
-const timeline =
-document.getElementById("timeline");
-
-const status =
-document.getElementById("status");
-
-const house =
-document.getElementById("house");
-
-const tree =
-document.getElementById("tree");
-
-const sun =
-document.getElementById("sun");
-
-
-/* ==========================
-   ATUALIZAR CENA
-========================== */
-
-function atualizarCena() {
-
-let cena = cenas[cenaAtual];
-
-character.textContent =
-cena.personagem;
-
-character.style.left =
-cena.posicao + "%";
-
-dialogue.textContent =
-cena.texto;
-
-texto.value =
-cena.texto;
-
-cenario.value =
-cena.cenario;
-
-duracao.value =
-cena.duracao;
-
-aplicarCenario(
-cena.cenario
-);
-
-mostrarTimeline();
-
+function mensagem(msg) {
+  statusEl.textContent = msg;
 }
-
-
-/* ==========================
-   TEXTO
-========================== */
-
-function mudarTexto() {
-
-cenas[cenaAtual].texto =
-texto.value;
-
-dialogue.textContent =
-texto.value;
-
-mostrarTimeline();
-
-}
-
-
-/* ==========================
-   PERSONAGEM
-========================== */
-
-function mudarPersonagem(personagem) {
-
-cenas[cenaAtual].personagem =
-personagem;
-
-character.textContent =
-personagem;
-
-mostrarTimeline();
-
-status.textContent =
-"👤 Personagem alterado";
-
-}
-
-
-/* ==========================
-   MOVIMENTO
-========================== */
-
-function moverEsquerda() {
-
-cenas[cenaAtual].posicao -= 5;
-
-if (
-cenas[cenaAtual].posicao < 0
-) {
-
-cenas[cenaAtual].posicao = 0;
-
-}
-
-character.style.left =
-cenas[cenaAtual].posicao + "%";
-
-status.textContent =
-"⬅️ Personagem movido";
-
-}
-
-
-function moverDireita() {
-
-cenas[cenaAtual].posicao += 5;
-
-if (
-cenas[cenaAtual].posicao > 85
-) {
-
-cenas[cenaAtual].posicao = 85;
-
-}
-
-character.style.left =
-cenas[cenaAtual].posicao + "%";
-
-status.textContent =
-"➡️ Personagem movido";
-
-}
-
-
-/* ==========================
-   ANIMAÇÃO
-========================== */
-
-function animar() {
-
-parar();
-
-animacao =
-setInterval(function() {
-
-cenas[cenaAtual].posicao += 3;
-
-if (
-cenas[cenaAtual].posicao > 85
-) {
-
-cenas[cenaAtual].posicao = 0;
-
-}
-
-character.style.left =
-cenas[cenaAtual].posicao + "%";
-
-}, 200);
-
-status.textContent =
-"▶️ Animação funcionando";
-
-}
-
-
-function parar() {
-
-if (
-animacao !== null
-) {
-
-clearInterval(animacao);
-
-animacao = null;
-
-}
-
-status.textContent =
-"⏹️ Animação parada";
-
-}
-
-
-/* ==========================
-   CENÁRIO
-========================== */
-
-function mudarCenario() {
-
-cenas[cenaAtual].cenario =
-cenario.value;
-
-aplicarCenario(
-cenario.value
-);
-
-mostrarTimeline();
-
-status.textContent =
-"🌎 Cenário alterado";
-
-}
-
 
 function aplicarCenario(tipo) {
+  const estilos = {
+    casa: [
+      "linear-gradient(#60a5fa 65%,#65a30d 65%)",
+      true, true, true
+    ],
+    parque: [
+      "linear-gradient(#38bdf8 65%,#4d7c0f 65%)",
+      false, true, true
+    ],
+    cidade: [
+      "linear-gradient(#64748b 65%,#334155 65%)",
+      false, false, true
+    ],
+    espaco: [
+      "#020617",
+      false, false, false
+    ]
+  };
 
-
-if (
-tipo === "casa"
-) {
-
-preview.style.background =
-"linear-gradient(#60a5fa 0%, #60a5fa 65%, #65a30d 65%, #65a30d 100%)";
-
-house.style.display =
-"block";
-
-tree.style.display =
-"block";
-
-sun.style.display =
-"block";
-
+  const e = estilos[tipo] || estilos.casa;
+  preview.style.background = e[0];
+  $("house").style.display = e[1] ? "block" : "none";
+  $("tree").style.display = e[2] ? "block" : "none";
+  $("sun").style.display = e[3] ? "block" : "none";
 }
 
+function atualizarCena() {
+  const c = cenas[cenaAtual];
+  if (!c) return;
 
-if (
-tipo === "parque"
-) {
+  character.textContent = c.personagem;
+  character.style.left = c.posicao + "%";
+  dialogue.textContent = c.texto;
 
-preview.style.background =
-"linear-gradient(#38bdf8 0%, #38bdf8 65%, #4d7c0f 65%, #4d7c0f 100%)";
+  $("texto").value = c.texto;
+  $("cenario").value = c.cenario;
+  $("movimento").value = c.movimento;
+  $("duracao").value = c.duracao;
 
-house.style.display =
-"none";
-
-tree.style.display =
-"block";
-
-sun.style.display =
-"block";
-
+  aplicarCenario(c.cenario);
+  mostrarTimeline();
 }
-
-
-if (
-tipo === "cidade"
-) {
-
-preview.style.background =
-"linear-gradient(#64748b 0%, #64748b 65%, #334155 65%, #334155 100%)";
-
-house.style.display =
-"none";
-
-tree.style.display =
-"none";
-
-sun.style.display =
-"block";
-
-}
-
-
-if (
-tipo === "espaco"
-) {
-
-preview.style.background =
-"#020617";
-
-house.style.display =
-"none";
-
-tree.style.display =
-"none";
-
-sun.style.display =
-"none";
-
-}
-
-}
-
-
-/* ==========================
-   DURAÇÃO
-========================== */
-
-function mudarDuracao() {
-
-let valor =
-parseInt(duracao.value);
-
-if (
-isNaN(valor)
-) {
-
-valor = 5;
-
-}
-
-if (
-valor < 1
-) {
-
-valor = 1;
-
-}
-
-if (
-valor > 30
-) {
-
-valor = 30;
-
-}
-
-duracao.value =
-valor;
-
-cenas[cenaAtual].duracao =
-valor;
-
-mostrarTimeline();
-
-}
-
-
-/* ==========================
-   TIMELINE
-========================== */
 
 function mostrarTimeline() {
+  const linha = $("timeline");
+  linha.replaceChildren();
 
-timeline.innerHTML = "";
+  cenas.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "scene" +
+      (i === cenaAtual ? " active" : "");
 
+    const emoji = document.createElement("div");
+    emoji.className = "sceneEmoji";
+    emoji.textContent = c.personagem;
 
-for (
-let i = 0;
-i < cenas.length;
-i++
-) {
+    const titulo = document.createElement("strong");
+    titulo.textContent = "Cena " + (i + 1);
 
-let div =
-document.createElement("div");
+    const resumo = document.createElement("div");
+    resumo.className = "sceneText";
+    resumo.textContent = c.texto;
 
-div.className =
-"scene";
+    const tempo = document.createElement("small");
+    tempo.textContent = "⏱️ " + c.duracao + "s";
 
-
-if (
-i === cenaAtual
-) {
-
-div.classList.add("active");
-
+    div.append(emoji, titulo, resumo, tempo);
+    div.onclick = () => selecionarCena(i);
+    linha.appendChild(div);
+  });
 }
 
-
-div.innerHTML =
-
-"<div class='sceneEmoji'>" +
-cenas[i].personagem +
-"</div>" +
-
-"<strong>Cena " +
-(i + 1) +
-"</strong>" +
-
-"<div class='sceneText'>" +
-cenas[i].texto +
-"</div>" +
-
-"<small>⏱️ " +
-cenas[i].duracao +
-"s</small>";
-
-
-div.onclick =
-function() {
-
-selecionarCena(i);
-
-};
-
-
-timeline.appendChild(div);
-
+function selecionarCena(i) {
+  pararProjeto();
+  cenaAtual = i;
+  atualizarCena();
+  mensagem("🎬 Cena " + (i + 1));
 }
 
+function mudarTexto() {
+  cenas[cenaAtual].texto = $("texto").value;
+  dialogue.textContent = $("texto").value;
+  mostrarTimeline();
 }
 
-
-/* ==========================
-   SELECIONAR CENA
-========================== */
-
-function selecionarCena(numero) {
-
-parar();
-
-pararProjeto();
-
-cenaAtual =
-numero;
-
-atualizarCena();
-
-status.textContent =
-"🎬 Cena " +
-(numero + 1) +
-" selecionada";
-
+function mudarPersonagem(p) {
+  cenas[cenaAtual].personagem = p;
+  atualizarCena();
 }
 
+function mudarCenario() {
+  cenas[cenaAtual].cenario = $("cenario").value;
+  atualizarCena();
+}
 
-/* ==========================
-   NOVA CENA
-========================== */
+function mudarMovimento() {
+  cenas[cenaAtual].movimento = $("movimento").value;
+}
+
+function mudarDuracao() {
+  let n = Number($("duracao").value);
+  if (!Number.isFinite(n)) n = 5;
+  n = Math.max(1, Math.min(30, Math.round(n)));
+  cenas[cenaAtual].duracao = n;
+  $("duracao").value = n;
+  mostrarTimeline();
+}
+
+function mover(valor) {
+  pararProjeto();
+  const c = cenas[cenaAtual];
+  c.posicao = Math.max(
+    0, Math.min(85, c.posicao + valor)
+  );
+  character.style.left = c.posicao + "%";
+}
+
+function pararAnimacao() {
+  if (animacao !== null) {
+    clearInterval(animacao);
+    animacao = null;
+  }
+}
+
+function parar() {
+  pararAnimacao();
+  mensagem("⏹️ Animação parada");
+}
+
+function animar() {
+  pararProjeto();
+  const c = cenas[cenaAtual];
+
+  animacao = setInterval(() => {
+    c.posicao += 2;
+    if (c.posicao > 85) c.posicao = 0;
+    character.style.left = c.posicao + "%";
+  }, 100);
+
+  mensagem("🚶 Personagem andando");
+}
 
 function adicionarCena() {
+  pararProjeto();
+  const anterior = cenas[cenaAtual];
+  const c = novaCena();
+  c.personagem = anterior.personagem;
+  c.cenario = anterior.cenario;
 
-let novaCena = {
-
-personagem:
-cenas[cenaAtual].personagem,
-
-cenario:
-cenas[cenaAtual].cenario,
-
-texto:
-"Nova cena",
-
-duracao:
-5,
-
-posicao:
-15
-
-};
-
-
-cenas.push(
-novaCena
-);
-
-cenaAtual =
-cenas.length - 1;
-
-atualizarCena();
-
-status.textContent =
-"➕ Nova cena criada";
-
+  cenas.push(c);
+  cenaAtual = cenas.length - 1;
+  atualizarCena();
+  mensagem("➕ Nova cena criada");
 }
-
-
-/* ==========================
-   EXCLUIR CENA
-========================== */
 
 function excluirCena() {
+  if (cenas.length === 1) {
+    alert("É necessário manter pelo menos uma cena.");
+    return;
+  }
 
-if (
-cenas.length === 1
-) {
-
-alert(
-"Você precisa ter pelo menos uma cena."
-);
-
-return;
-
+  pararProjeto();
+  cenas.splice(cenaAtual, 1);
+  cenaAtual = Math.min(cenaAtual, cenas.length - 1);
+  atualizarCena();
+  mensagem("🗑️ Cena excluída");
 }
 
+/* GERADOR AUTOMÁTICO */
 
-cenas.splice(
-cenaAtual,
-1
-);
-
-
-if (
-cenaAtual >= cenas.length
-) {
-
-cenaAtual =
-cenas.length - 1;
-
+function normalizar(s) {
+  return s.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 }
 
+function identificarPersonagem(s, anterior) {
+  const t = normalizar(s);
 
-atualizarCena();
+  if (/cachorro|cao|cachorrinho/.test(t)) return "🐶";
+  if (/gato|gatinho/.test(t)) return "🐱";
+  if (/alien|extraterrestre/.test(t)) return "👽";
+  if (/menina|garota|mulher|ela/.test(t)) return "👩";
+  if (/menino|garoto|homem|ele/.test(t)) return "👨";
+  if (/crianca|bebe/.test(t)) return "🧒";
 
-status.textContent =
-"🗑️ Cena excluída";
-
+  return anterior;
 }
 
+function identificarCenario(s, anterior) {
+  const t = normalizar(s);
 
-/* ==========================
-   REPRODUZIR
-========================== */
+  if (/espaco|planeta|lua|foguete/.test(t))
+    return "espaco";
 
-function reproduzir() {
+  if (/cidade|rua|predio|avenida/.test(t))
+    return "cidade";
 
-pararProjeto();
+  if (/parque|floresta|jardim|bosque/.test(t))
+    return "parque";
 
-let indice = 0;
+  if (/casa|quarto|cozinha/.test(t))
+    return "casa";
 
-function tocar() {
-
-if (
-indice >= cenas.length
-) {
-
-status.textContent =
-"✅ Projeto terminado";
-
-reproducao = null;
-
-return;
-
+  return anterior;
 }
 
+function identificarMovimento(s) {
+  const t = normalizar(s);
 
-cenaAtual =
-indice;
+  if (/correu|correndo|correr/.test(t))
+    return "correr";
 
-atualizarCena();
+  if (/voltou|retornou|esquerda/.test(t))
+    return "esquerda";
 
-status.textContent =
-"▶️ Reproduzindo cena " +
-(indice + 1);
+  if (/andou|caminhou|caminhando|foi|saiu|direita/.test(t))
+    return "direita";
 
-indice++;
-
-reproducao =
-setTimeout(
-tocar,
-cenas[cenaAtual - 1].duracao * 1000
-);
-
+  return "parado";
 }
 
+function gerarAnimacao() {
+  const historia = $("historia").value.trim();
 
-tocar();
+  if (!historia) {
+    alert("Escreva uma história primeiro!");
+    return;
+  }
 
+  // Quebra o texto por linhas e pontuação.
+  const frases = historia
+    .split(/\n+|(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  if (!frases.length) return;
+
+  pararProjeto();
+
+  const geradas = [];
+  let personagem = "👨";
+  let cenario = "casa";
+
+  frases.slice(0, 60).forEach(frase => {
+    personagem = identificarPersonagem(
+      frase, personagem
+    );
+
+    cenario = identificarCenario(
+      frase, cenario
+    );
+
+    const movimento = identificarMovimento(frase);
+    const c = novaCena(frase);
+
+    c.personagem = personagem;
+    c.cenario = cenario;
+    c.movimento = movimento;
+    c.posicao = movimento === "esquerda" ? 75 : 10;
+
+    // Falas mais longas recebem mais tempo.
+    c.duracao = Math.min(
+      12,
+      Math.max(3, Math.ceil(frase.length / 13))
+    );
+
+    geradas.push(c);
+  });
+
+  cenas = geradas;
+  cenaAtual = 0;
+  atualizarCena();
+
+  mensagem("✨ " + cenas.length +
+    " cenas geradas! Aperte Reproduzir.");
 }
 
+/* REPRODUÇÃO AUTOMÁTICA */
 
 function pararProjeto() {
+  token++;
 
-if (
-reproducao !== null
-) {
+  if (reproducao !== null) {
+    clearTimeout(reproducao);
+    reproducao = null;
+  }
 
-clearTimeout(
-reproducao
-);
-
-reproducao = null;
-
+  pararAnimacao();
 }
 
-status.textContent =
-"⏹️ Projeto parado";
+function reproduzir() {
+  pararProjeto();
+  const sessao = token;
+  let indice = 0;
 
+  function tocar() {
+    if (sessao !== token) return;
+
+    if (indice >= cenas.length) {
+      reproducao = null;
+      mensagem("✅ Projeto terminado!");
+      return;
+    }
+
+    cenaAtual = indice;
+    atualizarCena();
+
+    const c = cenas[indice];
+    const duracaoMs = c.duracao * 1000;
+    const inicio = performance.now();
+    const origem = c.posicao;
+
+    let destino = origem;
+
+    if (c.movimento === "direita") destino = 80;
+    if (c.movimento === "esquerda") destino = 5;
+    if (c.movimento === "correr") destino = 80;
+
+    mensagem("▶️ Cena " + (indice + 1) +
+      " de " + cenas.length);
+
+    const moverAutomaticamente = () => {
+      if (sessao !== token) return;
+
+      const decorrido = performance.now() - inicio;
+      const progresso = Math.min(
+        1, decorrido / duracaoMs
+      );
+
+      const posicao = origem +
+        (destino - origem) * progresso;
+
+      character.style.left = posicao + "%";
+
+      if (progresso < 1) {
+        reproducao = setTimeout(
+          moverAutomaticamente, 40
+        );
+      } else {
+        indice++;
+        tocar();
+      }
+    };
+
+    moverAutomaticamente();
+  }
+
+  tocar();
 }
 
-
-/* ==========================
-   SALVAR
-========================== */
+/* SALVAR E CARREGAR */
 
 function salvarProjeto() {
-
-localStorage.setItem(
-"animadorWeb",
-JSON.stringify(cenas)
-);
-
-status.textContent =
-"💾 Projeto salvo";
-
+  try {
+    localStorage.setItem(
+      "animadorWebV3",
+      JSON.stringify(cenas)
+    );
+    mensagem("💾 Projeto salvo!");
+  } catch (e) {
+    mensagem("❌ Não foi possível salvar.");
+  }
 }
-
-
-/* ==========================
-   CARREGAR
-========================== */
 
 function carregarProjeto() {
+  const salvo = localStorage.getItem(
+    "animadorWebV3"
+  );
 
-let salvo =
-localStorage.getItem(
-"animadorWeb"
-);
+  if (!salvo) {
+    alert("Nenhum projeto V3 salvo.");
+    return;
+  }
 
-if (
-!salvo
-) {
+  try {
+    const dados = JSON.parse(salvo);
 
-alert(
-"Nenhum projeto salvo."
-);
+    if (!Array.isArray(dados) || !dados.length)
+      throw new Error("Projeto inválido");
 
-return;
+    pararProjeto();
 
+    cenas = dados.map(d => ({
+      ...novaCena(),
+      ...d,
+      texto: String(d.texto || ""),
+      duracao: Math.max(
+        1, Math.min(30, Number(d.duracao) || 5)
+      ),
+      posicao: Math.max(
+        0, Math.min(85, Number(d.posicao) || 0)
+      )
+    }));
+
+    cenaAtual = 0;
+    atualizarCena();
+    mensagem("📂 Projeto carregado!");
+  } catch (e) {
+    alert("Erro ao carregar projeto.");
+  }
 }
-
-
-try {
-
-cenas =
-JSON.parse(salvo);
-
-cenaAtual = 0;
 
 atualizarCena();
-
-status.textContent =
-"📂 Projeto carregado";
-
-}
-
-catch {
-
-alert(
-"Erro ao carregar o projeto."
-);
-
-}
-
-}
-
-
-/* ==========================
-   INICIAR
-========================== */
-
-atualizarCena();
-
 </script>
 
-
 </body>
-
 </html>
