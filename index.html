@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animador Web V5</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#f8fafc;font:15px system-ui,Arial}header{background:#202d43;padding:18px;text-align:center;font-size:23px;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:15px}.panel{background:#202d43;padding:18px;border-radius:16px;margin:16px 0}textarea,input,select{width:100%;padding:12px;background:#101827;border:1px solid #64748b;border-radius:9px;color:white;font:inherit}textarea{min-height:140px;resize:vertical}label{display:block;margin:12px 0 6px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 15px;font:inherit;cursor:pointer}button:active{transform:scale(.98)}.green{background:#159447}.purple{background:#7c3aed}.red{background:#c62828}.gray{background:#526178}canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background:#8ed5fc}.timeline{display:flex;overflow-x:auto;gap:9px;padding:10px 0}.shot{min-width:120px;max-width:120px;text-align:left;background:#34435b;border:2px solid transparent;border-radius:10px;padding:10px;cursor:pointer}.shot.active{border-color:#8dbdff;background:#204d91}.shot small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{color:#9af0bb;min-height:24px}.hint{color:#cad5e6;line-height:1.5;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}h2{margin-top:0}</style></head><body><header>🎬 Animador Web V5 — Estúdio 2D<br><small style="font-size:12px;font-weight:500;opacity:.8">Motor de personagens com caminhada, fala, piscada, gestos e câmera</small></header><main class="wrap"><section class="panel"><h2>✨ Diretor automático</h2><label for="story">Sua história</label><textarea id="story">Um menino estava em casa.
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animador Web V5.1</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#f8fafc;font:15px system-ui,Arial}header{background:#202d43;padding:18px;text-align:center;font-size:23px;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:15px}.panel{background:#202d43;padding:18px;border-radius:16px;margin:16px 0}textarea,input,select{width:100%;padding:12px;background:#101827;border:1px solid #64748b;border-radius:9px;color:white;font:inherit}textarea{min-height:140px;resize:vertical}label{display:block;margin:12px 0 6px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 15px;font:inherit;cursor:pointer}button:active{transform:scale(.98)}.green{background:#159447}.purple{background:#7c3aed}.red{background:#c62828}.gray{background:#526178}canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background:#8ed5fc}.timeline{display:flex;overflow-x:auto;gap:9px;padding:10px 0}.shot{min-width:120px;max-width:120px;text-align:left;background:#34435b;border:2px solid transparent;border-radius:10px;padding:10px;cursor:pointer}.shot.active{border-color:#8dbdff;background:#204d91}.shot small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{color:#9af0bb;min-height:24px}.hint{color:#cad5e6;line-height:1.5;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}h2{margin-top:0}</style></head><body><header>🎬 Animador Web V5.1 — CORRIGIDA<br><small style="font-size:12px;font-weight:500;opacity:.8">Motor de personagens com caminhada, fala, piscada, gestos e câmera</small></header><main class="wrap"><section class="panel"><h2>✨ Diretor automático</h2><label for="story">Sua história</label><textarea id="story">Um menino estava em casa.
 Ele caminhou até o parque.
 No parque, encontrou um cachorro.
 O menino acenou para o cachorro.
@@ -20,31 +20,40 @@ function interpret(sentence,prev){
   else if(/cidade|rua|predio|avenida/.test(t))s.background='city';
   else if(/casa|quarto|cozinha/.test(t))s.background='home';
 
-  const dog=/cachorro|cao|cachorrinho/.test(t);
-  const cat=/gato|gatinho/.test(t);
-  const boy=/menino|garoto/.test(t);
-  const girl=/menina|garota/.test(t);
+  const hasDog=/cachorro|cao|cachorrinho/.test(t);
+  const hasCat=/gato|gatinho/.test(t);
+  const hasBoy=/menino|garoto/.test(t);
+  const hasGirl=/menina|garota/.test(t);
+  const hasHuman=hasBoy||hasGirl;
 
-  // Identifica explicitamente quem pratica a ação.
-  if(dog){
-    if(/cachorro\s+(correu|corre|correndo|andou|caminhou|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t)){
-      s.actor='dog';
-      s.second=(boy||girl)?(boy?'boy':'girl'):((prev.actor==='boy'||prev.actor==='girl')?prev.actor:'none');
-    }else{
-      s.second='dog';
-      if(boy||girl)s.actor=boy?'boy':'girl';
-    }
-  }else if(cat){
-    if(/gato\s+(correu|corre|correndo|andou|caminhou|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t)){
-      s.actor='cat';
-      s.second=(boy||girl)?(boy?'boy':'girl'):((prev.actor==='boy'||prev.actor==='girl')?prev.actor:'none');
-    }else{
-      s.second='cat';
-      if(boy||girl)s.actor=boy?'boy':'girl';
-    }
-  }else if(boy||girl){
-    s.actor=boy?'boy':'girl';
-    if(!dog&&!cat)s.second='none';
+  // Descobre explicitamente o sujeito da ação. O sujeito vem primeiro:
+  // "o cachorro correu" => cachorro é o ator; "o menino correu" => menino é o ator.
+  const dogActs=/\b(?:o\s+)?(?:cachorro|cao|cachorrinho)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou|correu)/.test(t);
+  const catActs=/\b(?:o\s+)?(?:gato|gatinho)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
+  const boyActs=/\b(?:o\s+)?(?:menino|garoto)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
+  const girlActs=/\b(?:a\s+)?(?:menina|garota)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
+
+  if(dogActs){
+    s.actor='dog';
+    s.second=hasHuman?(hasBoy?'boy':'girl'):(hasCat?'cat':((prev.actor==='boy'||prev.actor==='girl'||prev.actor==='cat')?prev.actor:'none'));
+  }else if(catActs){
+    s.actor='cat';
+    s.second=hasHuman?(hasBoy?'boy':'girl'):(hasDog?'dog':((prev.actor==='boy'||prev.actor==='girl'||prev.actor==='dog')?prev.actor:'none'));
+  }else if(boyActs){
+    s.actor='boy';
+    s.second=(hasDog?'dog':hasCat?'cat':(hasGirl?'girl':'none'));
+  }else if(girlActs){
+    s.actor='girl';
+    s.second=(hasDog?'dog':hasCat?'cat':(hasBoy?'boy':'none'));
+  }else if(hasDog){
+    s.actor=(prev.actor==='boy'||prev.actor==='girl')?prev.actor:'boy';
+    s.second='dog';
+  }else if(hasCat){
+    s.actor=(prev.actor==='boy'||prev.actor==='girl')?prev.actor:'boy';
+    s.second='cat';
+  }else if(hasHuman){
+    s.actor=hasBoy?'boy':'girl';
+    s.second='none';
   }
 
   if(/correu|correndo|correr/.test(t))s.action='run';
@@ -82,54 +91,61 @@ function human(x,ground,t,s,kind,dir=1,seed=0){
   const fast=s.action==='run';
   const cycle=t*(fast?13:7.5);
   const step=move?Math.sin(cycle):0;
-  const bob=move?Math.abs(Math.sin(cycle))*4:Math.sin(t*2.1+seed)*1.5;
-  const jump=s.action==='jump'?Math.abs(Math.sin(t*5.5))*70:0;
-  const talking=s.action==='talk' || /disse|falou|respondeu|perguntou/i.test(s.text||'');
+  const bob=move?Math.abs(Math.sin(cycle))*3:Math.sin(t*2.1+seed)*1.2;
+  const jump=s.action==='jump'?Math.abs(Math.sin(t*5.5))*55:0;
+  const talking=s.action==='talk' || /\b(?:disse|falou|respondeu|perguntou|conversou)\b/i.test(s.text||'');
   const waving=s.action==='wave';
   const blink=blinkState(t,seed);
   const skin='#efb47e', hair='#543821', shirt=kind==='girl'?'#e56b9f':'#3278e0', pants='#29416e';
   ctx.save();
   ctx.translate(x,ground-bob-jump);
   ctx.scale(dir,1);
-  // soft shadow
-  ctx.save(); ctx.scale(1,0.35); circle(0,4,43,'rgba(0,0,0,.16)'); ctx.restore();
-  // torso
-  ctx.fillStyle=shirt; ctx.beginPath(); ctx.roundRect(-25,-143,50,72,14); ctx.fill();
-  // neck
+  // Sombra no chão
+  ctx.save();ctx.scale(1,.3);circle(0,5,42,'rgba(0,0,0,.16)');ctx.restore();
+
+  // Corpo
+  ctx.fillStyle=shirt;ctx.beginPath();ctx.roundRect(-25,-143,50,72,14);ctx.fill();
   rect(-8,-151,16,14,skin);
-  // legs with walk cycle
-  const legA=move?(Math.PI/2 + step*0.42):Math.PI/2;
-  const legB=move?(Math.PI/2 - step*0.42):Math.PI/2;
-  const l1=limb(-14,-72,72,legA,pants,14);
-  const l2=limb(14,-72,72,legB,pants,14);
-  line(l1.x,l1.y,l1.x+dir*10,l1.y,pants,7); line(l2.x,l2.y,l2.x+dir*10,l2.y,pants,7);
-  // arms
-  let a1=move?Math.PI/2-step*0.55:Math.PI/2+0.15;
-  let a2=move?Math.PI/2+step*0.55:Math.PI/2-0.15;
-  if(waving) a2=-1.55+Math.sin(t*10)*0.28;
-  if(talking){a1=Math.PI/2+Math.sin(t*6)*0.12; a2=Math.PI/2-Math.sin(t*6)*0.12;}
-  limb(-22,-130,56,a1,skin,12); limb(22,-130,56,a2,skin,12);
-  // hand for wave
-  if(waving){circle(22+Math.cos(a2)*56, -130+Math.sin(a2)*56, 8, skin);}
-  // head + hair
+
+  // Pernas: quadril -> joelho -> pé. Isso evita as pernas "nascendo" na barriga.
+  const swing=move?step*0.48:0;
+  const kneeY=-36;
+  const footY=2;
+  const hipL={x:-13,y:-70}, hipR={x:13,y:-70};
+  const kneeL={x:-13+Math.sin(swing)*25,y:kneeY}, kneeR={x:13-Math.sin(swing)*25,y:kneeY};
+  const footL={x:kneeL.x+Math.sin(swing)*18+dir*7,y:footY};
+  const footR={x:kneeR.x-Math.sin(swing)*18+dir*7,y:footY};
+  line(hipL.x,hipL.y,kneeL.x,kneeL.y,pants,14);line(kneeL.x,kneeL.y,footL.x,footL.y,pants,13);
+  line(hipR.x,hipR.y,kneeR.x,kneeR.y,pants,14);line(kneeR.x,kneeR.y,footR.x,footR.y,pants,13);
+  line(footL.x-1,footL.y,footL.x+13,footL.y,pants,8);line(footR.x-1,footR.y,footR.x+13,footR.y,pants,8);
+
+  // Braços
+  let a1=move?Math.PI/2-swing*.9:Math.PI/2+0.12;
+  let a2=move?Math.PI/2+swing*.9:Math.PI/2-0.12;
+  if(waving)a2=-1.55+Math.sin(t*10)*0.25;
+  if(talking){a1=Math.PI/2+Math.sin(t*6)*0.10;a2=Math.PI/2-Math.sin(t*6)*0.10;}
+  const arm1=limb(-22,-130,56,a1,skin,12), arm2=limb(22,-130,56,a2,skin,12);
+  circle(arm1.x,arm1.y,7,skin);circle(arm2.x,arm2.y,7,skin);
+
+  // Cabeça/cabelo
   circle(0,-179,32,skin);
-  ctx.fillStyle=hair; ctx.beginPath(); ctx.arc(0,-190,33,Math.PI,2*Math.PI); ctx.fill();
+  ctx.fillStyle=hair;ctx.beginPath();ctx.arc(0,-190,33,Math.PI,2*Math.PI);ctx.fill();
   if(kind==='girl'){ctx.fillStyle=hair;ctx.fillRect(-34,-191,9,54);ctx.fillRect(25,-191,9,54);}
-  // face looking toward movement / secondary
-  const eyeY=-181, eyeX=dir*10;
+
+  // Olhos
   if(blink){line(-18,-181,-7,-181,'#263247',3);line(7,-181,18,-181,'#263247',3)}
-  else {circle(-11,-181,3,'#263247');circle(11,-181,3,'#263247');}
+  else{circle(-11,-181,3,'#263247');circle(11,-181,3,'#263247');}
+
+  // Boca: uma única forma por vez, sempre pequena e centralizada.
   if(talking){
-    // Durante a fala, desenha somente a boca aberta/fechada.
-    const open=2+Math.abs(Math.sin(t*12))*4;
-    ctx.fillStyle='#7e3440';
-    ctx.beginPath();ctx.ellipse(0,-163,6,open,0,0,Math.PI*2);ctx.fill();
+    const open=1.5+Math.abs(Math.sin(t*12))*2.8;
+    ctx.fillStyle='#7e3440';ctx.beginPath();ctx.ellipse(0,-163,5,open,0,0,Math.PI*2);ctx.fill();
   }else if(s.mood==='surprised'){
-    ctx.fillStyle='#823c40';ctx.beginPath();ctx.ellipse(0,-163,6,7,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#823c40';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,-163,5,0,Math.PI*2);ctx.stroke();
   }else if(s.mood==='sad'){
-    ctx.strokeStyle='#823c40';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-158,10,Math.PI,2*Math.PI);ctx.stroke();
+    ctx.strokeStyle='#823c40';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,-158,8,Math.PI,2*Math.PI);ctx.stroke();
   }else{
-    ctx.strokeStyle='#823c40';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-166,10,0,Math.PI);ctx.stroke();
+    ctx.strokeStyle='#823c40';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,-166,8,0,Math.PI);ctx.stroke();
   }
   ctx.restore();
 }
@@ -243,6 +259,4 @@ function draw(t=0){
   }
 }
 function wrap(text,n){let words=text.split(/\s+/),lines=[''];for(let w of words){let i=lines.length-1;if((lines[i]+' '+w).length>n&&lines[i])lines.push(w);else lines[i]+=(lines[i]?' ':'')+w}return lines.slice(0,4)}
-$('generate').onclick=generate;$('generatePlay').onclick=()=>{if(generate())play()};$('play').onclick=play;$('pause').onclick=()=>{if(playing){paused=!paused;if(!paused){last=performance.now();raf=requestAnimationFrame(tick)}say(paused?'⏸️ Pausado':'▶️ Reproduzindo...')}};$('stop').onclick=()=>{stop();draw();say('⏹️ Parado')};$('add').onclick=()=>{stop();scenes.push({...scenes[selected],text:'Nova cena'});selected=scenes.length-1;sync()};$('remove').onclick=()=>{if(scenes.length===1){say('⚠️ Mantenha pelo menos uma cena.');return}stop();scenes.splice(selected,1);selected=Math.min(selected,scenes.length-1);sync()};for(let [id,key] of [['line','text'],['actor','actor'],['second','second'],['background','background'],['action','action'],['mood','mood'],['duration','duration']])$(id).addEventListener('input',()=>{let v=$(id).value;scenes[selected][key]=key==='duration'?Math.max(2,Math.min(20,Number(v)||5)):v;timeline();draw(elapsed)});
-$('save').onclick=()=>{try{localStorage.setItem('animadorWebV5',JSON.stringify(scenes));say('💾 Projeto salvo neste navegador!')}catch(e){say('❌ Não foi possível salvar')}};
-function validate(data){if(!Array.isArray(data)||!data.length||data.length>100)throw Error('Projeto inválido');return data.map(o=>{let s={...make(),...o};s.duration=Math.max(2,Math.min(20,
+$('generate').onclick=
