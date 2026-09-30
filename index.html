@@ -68,6 +68,7 @@ A garota correu para casa.</textarea>
 
 <script>
 'use strict';
+window.addEventListener('error',function(e){try{var cv=document.getElementById('screen');if(cv){var g=cv.getContext('2d');g.fillStyle='#10182b';g.fillRect(0,0,cv.width,cv.height);g.fillStyle='#ffb4b4';g.font='bold 24px system-ui';g.fillText('Erro na V6',40,70);g.font='16px system-ui';g.fillStyle='#fff';g.fillText(String(e.message||'erro desconhecido').slice(0,90),40,105);}}catch(_){} });
 const $=id=>document.getElementById(id), c=$('screen'),x=c.getContext('2d');
 x.lineCap='round';x.lineJoin='round';
 
@@ -123,6 +124,7 @@ function background(type,t){
   if(type==='festival'){x.fillStyle='#6b4b3b';x.fillRect(0,380,960,160);for(let i=0;i<7;i++){x.fillStyle=i%2?'#f15b74':'#5bd1e8';x.fillRect(80+i*125,130,50,250)}}
   if(type==='rain'){for(let i=0;i<110;i++){x.strokeStyle='#b9dcff';x.globalAlpha=.35;x.lineWidth=1;x.beginPath();x.moveTo((i*83)%960,(i*41)%390);x.lineTo((i*83)%960-7,(i*41)%390+18);x.stroke()}x.globalAlpha=1}
 }
+function poly(points,fill,stroke=null,lw=2){x.beginPath();x.moveTo(points[0][0],points[0][1]);for(var i=1;i<points.length;i++)x.lineTo(points[i][0],points[i][1]);x.closePath();x.fillStyle=fill;x.fill();if(stroke){x.strokeStyle=stroke;x.lineWidth=lw;x.stroke();}}
 function tree(px,py,s){x.fillStyle='#68442f';x.fillRect(px-9*s,py-65*s,18*s,70*s);ell(px,py-82*s,45*s,35*s,'#418c55');ell(px-30*s,py-60*s,30*s,25*s,'#4fa45e');ell(px+30*s,py-60*s,30*s,25*s,'#4a9958')}
 
 function human(ch,px,ground,phase,mood,action,scale=1,flip=1){
@@ -139,7 +141,7 @@ function human(ch,px,ground,phase,mood,action,scale=1,flip=1){
   line([11*scale,y+105*scale],[(11-stride)*scale,y+145*scale],12*scale);
   x.strokeStyle='#f0c4a2';line([(-11+stride)*scale,y+145*scale],[(-18+stride)*scale,y+148*scale],6*scale);line([(11-stride)*scale,y+145*scale],[(18-stride)*scale,y+148*scale],6*scale);
   // torso
-  x.fillStyle=d.shirt;x.beginPath();x.roundRect(-29*scale,y+58*scale,58*scale,55*scale,13*scale);x.fill();
+  rr(-29*scale,y+58*scale,58*scale,55*scale,13*scale,d.shirt);
   // arms
   let arm=Math.sin(phase*(moving?7:3))*18*scale;
   x.strokeStyle=d.skin;line([-25*scale,y+67*scale],[-37*scale,y+105*scale+arm],9*scale);line([25*scale,y+67*scale],[37*scale,y+105*scale-arm],9*scale);
@@ -229,10 +231,4 @@ function generate(){
   if(!scenes.length)scenes=[interpret('Uma garota caminhou no parque.',null)];
   cur=0;elapsed=0;renderTimeline();loadEditor();draw(0);
 }
-function demo(){
-  scenes=[
-    {text:'Uma garota caminhava pela cidade ao entardecer.',actor:'girl',second:'none',background:'sunset',action:'walk',mood:'happy',camera:'wide',duration:5},
-    {text:'Ela encontrou um cachorro no parque.',actor:'girl',second:'dog',background:'park',action:'walk',mood:'surprised',camera:'medium',duration:5},
-    {text:'O cachorro correu até ela.',actor:'dog',second:'girl',background:'park',action:'run',mood:'happy',camera:'follow',duration:5},
-    {text:'A garota acenou e sorriu.',actor:'girl',second:'dog',background:'park',action:'wave',mood:'happy',camera:'close',duration:4},
-  
+function 
