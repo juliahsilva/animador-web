@@ -1,262 +1,238 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animador Web V5.1</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#f8fafc;font:15px system-ui,Arial}header{background:#202d43;padding:18px;text-align:center;font-size:23px;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:15px}.panel{background:#202d43;padding:18px;border-radius:16px;margin:16px 0}textarea,input,select{width:100%;padding:12px;background:#101827;border:1px solid #64748b;border-radius:9px;color:white;font:inherit}textarea{min-height:140px;resize:vertical}label{display:block;margin:12px 0 6px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 15px;font:inherit;cursor:pointer}button:active{transform:scale(.98)}.green{background:#159447}.purple{background:#7c3aed}.red{background:#c62828}.gray{background:#526178}canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background:#8ed5fc}.timeline{display:flex;overflow-x:auto;gap:9px;padding:10px 0}.shot{min-width:120px;max-width:120px;text-align:left;background:#34435b;border:2px solid transparent;border-radius:10px;padding:10px;cursor:pointer}.shot.active{border-color:#8dbdff;background:#204d91}.shot small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{color:#9af0bb;min-height:24px}.hint{color:#cad5e6;line-height:1.5;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}h2{margin-top:0}</style></head><body><header>🎬 Animador Web V5.1 — CORRIGIDA<br><small style="font-size:12px;font-weight:500;opacity:.8">Motor de personagens com caminhada, fala, piscada, gestos e câmera</small></header><main class="wrap"><section class="panel"><h2>✨ Diretor automático</h2><label for="story">Sua história</label><textarea id="story">Um menino estava em casa.
-Ele caminhou até o parque.
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Animador Web V6 — Anime Studio</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080b15;color:#fff;font-family:system-ui,Arial,sans-serif}
+header{padding:15px;text-align:center;background:linear-gradient(135deg,#121b39,#283c78);border-bottom:1px solid #40548d}
+header h1{margin:0;font-size:22px}header p{margin:5px 0 0;color:#bdc9e7;font-size:12px}
+main{max-width:1100px;margin:auto;padding:10px}.box{background:#11182a;border:1px solid #2b3b61;border-radius:15px;padding:12px;margin:10px 0}
+textarea,input,select{width:100%;background:#080e1d;color:#fff;border:1px solid #344568;border-radius:9px;padding:10px;font:inherit}
+textarea{min-height:130px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+label{font-size:11px;color:#aebddd;display:block;margin:6px 0 4px}
+button{border:0;border-radius:9px;padding:10px 13px;background:#3564e8;color:white;font-weight:700;margin:3px;cursor:pointer}
+.green{background:#159661}.red{background:#bd354b}.purple{background:#7549e8}.orange{background:#c77a20}.gray{background:#53617b}
+canvas{width:100%;display:block;border-radius:13px;border:1px solid #35476d;background:#8ec6ef}
+.timeline{display:flex;gap:7px;overflow:auto;padding:4px}.scene{min-width:150px;background:#090f1e;border:1px solid #2d3e63;border-radius:10px;padding:8px;cursor:pointer}.scene.active{border-color:#79a2ff;box-shadow:0 0 0 2px #79a2ff33}.scene b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scene small{color:#9eafd0}
+.note{color:#9eafd0;font-size:12px;line-height:1.4}.status{float:right;background:#202e50;padding:3px 7px;border-radius:99px;font-size:11px;color:#bdd0ff}
+@media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}header h1{font-size:19px}}
+</style>
+</head>
+<body>
+<header><h1>🎬 Animador Web V6 — ANIME STUDIO</h1><p>Motor 2D procedural • personagens articulados • câmera • cenários • direção automática</p></header>
+<main>
+<div class="box">
+<h3>🧠 História</h3>
+<textarea id="story">Uma garota estava na cidade ao entardecer.
+Ela caminhou até o parque.
 No parque, encontrou um cachorro.
-O menino acenou para o cachorro.
-O cachorro correu até o menino.
-O menino disse: Vamos brincar!</textarea><div class="buttons"><button class="purple" id="generate">✨ Gerar animação</button><button class="green" id="generatePlay">🎬 Gerar e reproduzir</button></div><p class="hint">Experimente frases com menino, menina, cachorro, gato, casa, parque, cidade, espaço, andar, correr, acenar, pular, feliz e triste. Esta versão interpreta palavras-chave, não usa IA externa.</p></section><section class="panel"><h2>🎥 Prévia animada</h2><canvas id="screen" width="960" height="540" aria-label="Prévia da animação 2D"></canvas><div class="buttons"><button class="green" id="play">▶️ Reproduzir</button><button class="gray" id="pause">⏸️ Pausar</button><button class="red" id="stop">⏹️ Parar</button></div><p id="status" class="status" aria-live="polite">✅ Estúdio pronto</p></section><section class="panel"><h2>🎞️ Timeline</h2><div id="timeline" class="timeline"></div><div class="buttons"><button id="add">➕ Nova cena</button><button class="red" id="remove">🗑️ Excluir cena</button></div></section><section class="panel"><h2>⚙️ Editor da cena</h2><label for="line">Legenda / fala</label><textarea id="line" style="min-height:85px"></textarea><div class="grid"><div><label for="actor">Personagem principal</label><select id="actor"><option value="boy">Menino</option><option value="girl">Menina</option><option value="dog">Cachorro</option><option value="cat">Gato</option></select></div><div><label for="background">Cenário</label><select id="background"><option value="home">Casa</option><option value="park">Parque</option><option value="city">Cidade</option><option value="space">Espaço</option></select></div><div><label for="action">Ação</label><select id="action"><option value="idle">Parado / respirando</option><option value="walk">Andar</option><option value="run">Correr</option><option value="wave">Acenar</option><option value="jump">Pular</option><option value="talk">Falar</option></select></div><div><label for="mood">Expressão</label><select id="mood"><option value="happy">Feliz</option><option value="neutral">Normal</option><option value="surprised">Surpreso</option><option value="sad">Triste</option></select></div><div><label for="second">Personagem secundário</label><select id="second"><option value="none">Nenhum</option><option value="boy">Menino</option><option value="girl">Menina</option><option value="dog">Cachorro</option><option value="cat">Gato</option></select></div><div><label for="duration">Duração (segundos)</label><input id="duration" type="number" min="2" max="20" value="5"></div></div><div class="buttons"><button class="green" id="save">💾 Salvar projeto</button><button id="load">📂 Carregar projeto</button><button class="gray" id="download">⬇️ Baixar projeto JSON</button><button class="purple" id="record">🔴 Gravar vídeo WebM</button></div><p class="hint">A gravação usa os recursos do navegador; em alguns celulares, o formato WebM pode não ser compatível. Salvar usa armazenamento local deste navegador.</p></section></main><script>
+O cachorro correu até a garota.
+A garota acenou para o cachorro.
+Eles brincaram no parque.
+Depois começou a chover.
+A garota correu para casa.</textarea>
+<button id="generate">✨ Gerar V6</button><button id="generatePlay" class="green">▶ Gerar e tocar</button><button id="demo" class="purple">🎞️ Demo cinematográfica</button>
+<p class="note">Esta versão é toda desenhada pelo navegador. Não usa imagens externas nem bibliotecas, para continuar leve e funcionar no celular.</p>
+</div>
+
+<div class="box">
+<div><b id="info">Cena 1</b><span id="status" class="status">PRONTO</span></div>
+<canvas id="screen" width="960" height="540"></canvas>
+<input id="scrub" type="range" min="0" max="1" step=".001" value="0">
+<button id="play">▶ Tocar</button><button id="pause" class="gray">⏸ Pausar</button><button id="stop" class="red">⏹ Parar</button><button id="record" class="orange">🎥 Gravar WebM</button>
+</div>
+
+<div class="box">
+<h3>🎞️ Linha do tempo</h3><div id="timeline" class="timeline"></div>
+<button id="add" class="green">＋ Cena</button><button id="dup" class="gray">⧉ Duplicar</button><button id="del" class="red">🗑 Apagar</button>
+</div>
+
+<div class="box">
+<h3>🎨 Diretor da cena</h3>
+<div class="grid">
+<div><label>Texto</label><input id="line"></div>
+<div><label>Principal</label><select id="actor"></select></div>
+<div><label>Segundo</label><select id="second"></select></div>
+<div><label>Cenário</label><select id="bg"></select></div>
+<div><label>Ação</label><select id="action"></select></div>
+<div><label>Expressão</label><select id="mood"></select></div>
+<div><label>Câmera</label><select id="camera"></select></div>
+<div><label>Duração</label><input id="duration" type="number" min="1" max="30" step=".5"></div>
+</div><button id="apply">Aplicar</button>
+</div>
+
+<div class="box"><h3>💾 Projeto</h3><button id="save">💾 Salvar</button><button id="load" class="gray">↻ Carregar</button><button id="download" class="purple">⬇ Baixar JSON</button></div>
+</main>
+
+<script>
 'use strict';
-const $=id=>document.getElementById(id),canvas=$('screen'),ctx=canvas.getContext('2d');
-const W=960,H=540;let scenes=[],selected=0,playing=false,paused=false,elapsed=0,last=0,raf=0,recorder=null,recordChunks=[];
-const make=(text='Nova cena')=>({text,actor:'boy',second:'none',background:'home',action:'idle',mood:'happy',duration:5});
-scenes=[make('Um menino estava em casa.')];
-const say=s=>$('status').textContent=s;
-const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-function interpret(sentence,prev){
-  const t=norm(sentence);
-  const s={...prev,text:sentence,duration:Math.max(3,Math.min(10,Math.ceil(sentence.length/16)))};
+const $=id=>document.getElementById(id), c=$('screen'),x=c.getContext('2d');
+x.lineCap='round';x.lineJoin='round';
 
-  if(/espaco|planeta|lua|foguete/.test(t))s.background='space';
-  else if(/parque|floresta|jardim|bosque/.test(t))s.background='park';
-  else if(/cidade|rua|predio|avenida/.test(t))s.background='city';
-  else if(/casa|quarto|cozinha/.test(t))s.background='home';
+const chars={
+boy:{name:'Ren',type:'human',skin:'#d99a77',hair:'#20283b',shirt:'#477ee0',pants:'#26314d',accent:'#86aaff'},
+girl:{name:'Mika',type:'human',skin:'#edaf8c',hair:'#522e54',shirt:'#e778a0',pants:'#51477e',accent:'#ffb7d1'},
+man:{name:'Kai',type:'human',skin:'#c9896b',hair:'#1e2532',shirt:'#657084',pants:'#242a38',accent:'#a9b8e8'},
+woman:{name:'Aya',type:'human',skin:'#e8a785',hair:'#623c2e',shirt:'#c96f88',pants:'#4d3d70',accent:'#f5a7ca'},
+dog:{name:'Koro',type:'animal',fur:'#a96843',accent:'#efb986'},
+cat:{name:'Yuki',type:'animal',fur:'#dfe4ec',accent:'#9aa8c1'},
+fox:{name:'Aki',type:'animal',fur:'#d66d38',accent:'#ffd1a8'},
+wolf:{name:'Rin',type:'animal',fur:'#818c9e',accent:'#cbd5e1'},
+robot:{name:'N-01',type:'robot',metal:'#aebbd0',accent:'#62d7ff'},
+alien:{name:'Luma',type:'alien',skin:'#8ad4ba',hair:'#7056e8',accent:'#c6b8ff'}
+};
+const bgs={home:'Casa',park:'Parque',city:'Cidade',school:'Escola',beach:'Praia',forest:'Floresta',mountain:'Montanha',night:'Noite',rain:'Chuva',sunset:'Pôr do sol',shrine:'Templo',space:'Espaço',cyber:'Cyberpunk',cafe:'Café',bedroom:'Quarto',festival:'Festival'};
+const acts={idle:'Parado',walk:'Caminhar',run:'Correr',wave:'Acenar',jump:'Pular',talk:'Falar',sit:'Sentar',dance:'Dançar',point:'Apontar',think:'Pensar'};
+const moods={happy:'Feliz',neutral:'Neutro',surprised:'Surpreso',sad:'Triste',angry:'Bravo',love:'Carinhoso'};
+const cams={wide:'Plano aberto',medium:'Plano médio',close:'Close',follow:'Acompanhar',zoom:'Zoom',shake:'Dinâmica'};
 
-  const hasDog=/cachorro|cao|cachorrinho/.test(t);
-  const hasCat=/gato|gatinho/.test(t);
-  const hasBoy=/menino|garoto/.test(t);
-  const hasGirl=/menina|garota/.test(t);
-  const hasHuman=hasBoy||hasGirl;
+function fill(id,obj,none=false){let s=$(id);s.innerHTML='';if(none){let o=document.createElement('option');o.value='none';o.textContent='Nenhum';s.appendChild(o)}for(let k in obj){let o=document.createElement('option');o.value=k;o.textContent=obj[k].name||obj[k];s.appendChild(o)}}
+fill('actor',chars);fill('second',chars,true);fill('bg',bgs);fill('action',acts);fill('mood',moods);fill('camera',cams);
 
-  // Descobre explicitamente o sujeito da ação. O sujeito vem primeiro:
-  // "o cachorro correu" => cachorro é o ator; "o menino correu" => menino é o ator.
-  const dogActs=/\b(?:o\s+)?(?:cachorro|cao|cachorrinho)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou|correu)/.test(t);
-  const catActs=/\b(?:o\s+)?(?:gato|gatinho)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
-  const boyActs=/\b(?:o\s+)?(?:menino|garoto)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
-  const girlActs=/\b(?:a\s+)?(?:menina|garota)\s+(?:correu|corre|correndo|andou|caminhou|andando|saiu|foi|pulou|pulando|acenou|acena|disse|falou|respondeu|brincou)/.test(t);
+let scenes=[],cur=0,playing=false,start=0,elapsed=0,raf=0,rec=null,chunks=[];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+function line(a,b,d=4){x.lineWidth=d;x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.stroke()}
+function ell(px,py,rx,ry,col,stroke){x.beginPath();x.ellipse(px,py,rx,ry,0,0,Math.PI*2);x.fillStyle=col;x.fill();if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.stroke()}}
+function rr(px,py,w,h,r,col){x.fillStyle=col;x.beginPath();x.roundRect(px,py,w,h,r);x.fill()}
+function txt(t,px,py,size=18,col='#fff',align='left',weight=600){x.font=weight+' '+size+'px system-ui';x.fillStyle=col;x.textAlign=align;x.fillText(t,px,py)}
+function wrap(s,n=40){let a=[],q='';for(let w of String(s).split(/\s+/)){if((q+' '+w).trim().length>n){a.push(q);q=w}else q=(q+' '+w).trim()}if(q)a.push(q);return a.slice(0,3)}
 
-  if(dogActs){
-    s.actor='dog';
-    s.second=hasHuman?(hasBoy?'boy':'girl'):(hasCat?'cat':((prev.actor==='boy'||prev.actor==='girl'||prev.actor==='cat')?prev.actor:'none'));
-  }else if(catActs){
-    s.actor='cat';
-    s.second=hasHuman?(hasBoy?'boy':'girl'):(hasDog?'dog':((prev.actor==='boy'||prev.actor==='girl'||prev.actor==='dog')?prev.actor:'none'));
-  }else if(boyActs){
-    s.actor='boy';
-    s.second=(hasDog?'dog':hasCat?'cat':(hasGirl?'girl':'none'));
-  }else if(girlActs){
-    s.actor='girl';
-    s.second=(hasDog?'dog':hasCat?'cat':(hasBoy?'boy':'none'));
-  }else if(hasDog){
-    s.actor=(prev.actor==='boy'||prev.actor==='girl')?prev.actor:'boy';
-    s.second='dog';
-  }else if(hasCat){
-    s.actor=(prev.actor==='boy'||prev.actor==='girl')?prev.actor:'boy';
-    s.second='cat';
-  }else if(hasHuman){
-    s.actor=hasBoy?'boy':'girl';
-    s.second='none';
-  }
+function background(type,t){
+  let g=x.createLinearGradient(0,0,0,540);
+  if(type==='night'){g.addColorStop(0,'#101b43');g.addColorStop(1,'#27324e')}
+  else if(type==='sunset'){g.addColorStop(0,'#ff9a83');g.addColorStop(.55,'#f7c37c');g.addColorStop(1,'#7b6bb2')}
+  else if(type==='rain'){g.addColorStop(0,'#657a9b');g.addColorStop(1,'#273449')}
+  else if(type==='space'||type==='cyber'){g.addColorStop(0,'#090b21');g.addColorStop(1,'#20255b')}
+  else{g.addColorStop(0,'#8ed0f4');g.addColorStop(1,'#e7f3fa')}
+  x.fillStyle=g;x.fillRect(0,0,960,540);
 
-  if(/correu|correndo|correr/.test(t))s.action='run';
-  else if(/caminhou|andou|andando|saiu|foi/.test(t))s.action='walk';
-  else if(/acenou|acenar|acenando/.test(t))s.action='wave';
-  else if(/pulou|pular|saltou/.test(t))s.action='jump';
-  else if(/disse|falou|respondeu|perguntou|conversou/.test(t))s.action='talk';
-  else s.action='idle';
-
-  s.mood=/triste|chorou|choro/.test(t)?'sad':/surpres|assustad|uau|espant/.test(t)?'surprised':/feliz|alegre|brinc/.test(t)?'happy':'happy';
-  return s;
+  if(type==='space'){for(let i=0;i<90;i++){let sx=(i*137)%960,sy=(i*73)%300;x.fillStyle='#fff';x.globalAlpha=.4+.6*((i%5)/5);x.fillRect(sx,sy,2,2)}x.globalAlpha=1;ell(790,95,45,45,'#d8d8ec');return}
+  if(type==='night'){ell(790,85,42,42,'#f2f0d5');for(let i=0;i<30;i++){x.fillStyle='#fff';x.globalAlpha=.6;x.fillRect((i*97)%960,(i*43)%250,2,2)}x.globalAlpha=1}
+  if(type!=='rain'&&type!=='cyber'){ell(120,85,40,40,type==='night'?'#ffd66b':'#ffd85e')}
+  if(type==='cyber'){for(let i=0;i<14;i++){let bx=i*75+20,h=90+(i*37)%170;x.fillStyle=i%2?'#18234b':'#202b57';x.fillRect(bx,330-h,60,h);for(let yy=345-h;yy<330;yy+=18){x.fillStyle='#63d9ff';x.fillRect(bx+10,yy,7,5);x.fillStyle='#ff65cf';x.fillRect(bx+27,yy,7,5)}}x.fillStyle='#10152c';x.fillRect(0,420,960,120);return}
+  if(type==='city'||type==='rain'||type==='cafe'){for(let i=0;i<12;i++){let bx=i*88,h=70+(i*31)%150;x.fillStyle=i%2?'#8b9bb4':'#7488a3';x.fillRect(bx,390-h,70,h);for(let yy=405-h;yy<385;yy+=22){x.fillStyle='#f9df91';x.fillRect(bx+12,yy,8,7);x.fillRect(bx+34,yy,8,7)}}x.fillStyle='#49566b';x.fillRect(0,390,960,150)}
+  else if(type==='beach'){x.fillStyle='#f3d58c';x.fillRect(0,355,960,185);x.fillStyle='#6cc8e8';x.fillRect(0,310,960,45)}
+  else if(type==='forest'){x.fillStyle='#75b982';x.fillRect(0,310,960,230);for(let i=0;i<11;i++)tree(i*100+50,360,1)}
+  else if(type==='mountain'){x.fillStyle='#7590aa';poly([[0,330],[170,130],[340,330]],'#7289a0');poly([[230,330],[500,100],[780,330]],'#647d95');x.fillStyle='#6fa56c';x.fillRect(0,330,960,210)}
+  else {x.fillStyle=type==='shrine'?'#79a868':'#78b86e';x.fillRect(0,330,960,210);for(let i=0;i<7;i++)tree(i*150+60,355,.8)}
+  if(type==='home'||type==='bedroom'){x.fillStyle='#d8c3a5';x.fillRect(0,310,960,230);x.fillStyle='#b77955';x.fillRect(350,180,260,160);x.fillStyle='#8a513a';x.fillRect(450,250,60,90);x.fillStyle='#8dd3e8';x.fillRect(390,215,50,50);x.fillRect(520,215,50,50);x.fillStyle='#e5a85d';x.fillRect(70,400,820,18)}
+  if(type==='school'){x.fillStyle='#e2b06d';x.fillRect(200,180,560,230);x.fillStyle='#a94d55';x.fillRect(170,150,620,55);for(let i=0;i<5;i++){x.fillStyle='#8bd0ea';x.fillRect(250+i*95,230,60,55)}}
+  if(type==='temple'||type==='shrine'){x.fillStyle='#c74b4f';x.fillRect(300,185,360,190);x.fillStyle='#8d3039';poly([[250,190],[710,190],[650,135],[310,135]],'#9b303c');x.fillStyle='#f1d38d';x.fillRect(455,275,50,100)}
+  if(type==='festival'){x.fillStyle='#6b4b3b';x.fillRect(0,380,960,160);for(let i=0;i<7;i++){x.fillStyle=i%2?'#f15b74':'#5bd1e8';x.fillRect(80+i*125,130,50,250)}}
+  if(type==='rain'){for(let i=0;i<110;i++){x.strokeStyle='#b9dcff';x.globalAlpha=.35;x.lineWidth=1;x.beginPath();x.moveTo((i*83)%960,(i*41)%390);x.lineTo((i*83)%960-7,(i*41)%390+18);x.stroke()}x.globalAlpha=1}
 }
-function generate(){let parts=$('story').value.split(/\n+|(?<=[.!?])\s+/).map(x=>x.trim()).filter(Boolean).slice(0,50);if(!parts.length){say('⚠️ Escreva uma história primeiro.');return false}stop();let prev=make();scenes=parts.map(p=>(prev=interpret(p,prev)));selected=0;elapsed=0;sync();say(`✨ ${scenes.length} cenas criadas!`);return true}
-function sync(){let s=scenes[selected];if(!s)return;for(let [id,key] of [['line','text'],['actor','actor'],['second','second'],['background','background'],['action','action'],['mood','mood'],['duration','duration']])$(id).value=s[key];timeline();draw(elapsed)}
-function timeline(){let el=$('timeline');el.replaceChildren();scenes.forEach((s,i)=>{let b=document.createElement('button');b.className='shot'+(i===selected?' active':'');let title=document.createElement('strong'),small=document.createElement('small');title.textContent=`Cena ${i+1} · ${s.duration}s`;small.textContent=s.text;b.append(title,small);b.onclick=()=>{stop();selected=i;sync();say(`🎬 Cena ${i+1}`)};el.append(b)})}
-function stop(){playing=false;paused=false;cancelAnimationFrame(raf);raf=0;elapsed=0;last=0}
-function play(){if(!scenes.length)return;if(playing&&!paused)return;if(!playing){elapsed=0;selected=0;playing=true}paused=false;last=performance.now();raf=requestAnimationFrame(tick);say('▶️ Reproduzindo...')}
-function tick(now){if(!playing||paused)return;let dt=Math.min(.1,(now-last)/1000);last=now;elapsed+=dt;let s=scenes[selected];if(elapsed>=s.duration){elapsed-=s.duration;selected++;if(selected>=scenes.length){stop();selected=scenes.length-1;sync();say('✅ Animação terminada!');if(recorder&&recorder.state==='recording')recorder.stop();return}sync()}draw(elapsed);raf=requestAnimationFrame(tick)}
-function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}function circle(x,y,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}function line(x1,y1,x2,y2,color,width=4){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
-function cloud(x,y){circle(x,y,26,'#fff');circle(x+28,y-12,34,'#fff');circle(x+58,y,26,'#fff');rect(x,y,58,23,'#fff')}
-function tree(x,y,k=1){ctx.save();ctx.translate(x,y);ctx.scale(k,k);rect(-10,-125,20,125,'#895735');circle(-40,-145,48,'#288a48');circle(20,-164,56,'#39a857');circle(54,-136,39,'#2b9549');ctx.restore()}
-function house(x,y){rect(x-90,y-120,180,120,'#f8e8c8');ctx.fillStyle='#b94d42';ctx.beginPath();ctx.moveTo(x-112,y-120);ctx.lineTo(x,y-215);ctx.lineTo(x+112,y-120);ctx.fill();rect(x-18,y-66,38,66,'#8d5a3a');rect(x-69,y-90,34,35,'#8acdf4');rect(x+35,y-90,34,35,'#8acdf4')}
-function background(kind,t){if(kind==='space'){rect(0,0,W,H,'#10112f');for(let i=0;i<65;i++){let x=(i*137+73)%960,y=(i*79+17)%420;circle(x,y,i%3+1,'#fff')}circle(770,120,62,'#ffd37a');ctx.fillStyle='#45416c';ctx.beginPath();ctx.ellipse(480,570,800,160,0,0,Math.PI*2);ctx.fill();return}rect(0,0,W,H,kind==='city'?'#a9c2e0':'#87d3fc');cloud(130+Math.sin(t*.15)*18,100);cloud(520,65);circle(810,88,43,'#ffe06b');if(kind==='city'){for(let i=0;i<9;i++){let h=130+(i*53)%145;rect(i*125-25,395-h,112,h,'#617f9e');for(let a=0;a<3;a++)for(let b=0;b<4;b++)rect(i*125+a*30,410-h+b*29,14,16,'#f7e7a7')}rect(0,395,W,145,'#626d78');rect(0,475,W,8,'#e5e7eb');return}rect(0,365,W,175,kind==='park'?'#6dbd57':'#76ba50');ctx.fillStyle='#80c86a';ctx.beginPath();ctx.ellipse(220,380,390,85,0,Math.PI,2*Math.PI);ctx.fill();if(kind==='home'){house(515,390);tree(790,393,1.15)}else{tree(145,390,1.1);tree(800,390,1.25);for(let i=0;i<15;i++)circle((i*83)%950,395+(i*19)%100,4,i%2?'#ffdb4f':'#f48fb1')}}
-function limb(x1,y1,len,ang,color,width=12){
-  const x2=x1+Math.cos(ang)*len, y2=y1+Math.sin(ang)*len;
-  line(x1,y1,x2,y2,color,width);
-  return {x:x2,y:y2};
+function tree(px,py,s){x.fillStyle='#68442f';x.fillRect(px-9*s,py-65*s,18*s,70*s);ell(px,py-82*s,45*s,35*s,'#418c55');ell(px-30*s,py-60*s,30*s,25*s,'#4fa45e');ell(px+30*s,py-60*s,30*s,25*s,'#4a9958')}
+
+function human(ch,px,ground,phase,mood,action,scale=1,flip=1){
+  let d=chars[ch], run=action==='run'||action==='walk', moving=run||action==='dance';
+  let bob=moving?Math.sin(phase*(action==='run'?13:7))*.045:Math.sin(phase*2)*.01;
+  let H=160*scale, head=38*scale, y=ground-H+bob*H, sw=flip;
+  x.save();x.translate(px,0);x.scale(sw,1);
+  // shadow
+  x.fillStyle='#0003';x.beginPath();x.ellipse(0,ground+2,42*scale,9*scale,0,0,Math.PI*2);x.fill();
+  // legs from hips, not belly
+  let stride=moving?Math.sin(phase*(action==='run'?13:7))*24*scale:0;
+  x.strokeStyle=d.pants;x.lineWidth=12*scale;
+  line([-11*scale,y+105*scale],[(-11+stride)*scale,y+145*scale],12*scale);
+  line([11*scale,y+105*scale],[(11-stride)*scale,y+145*scale],12*scale);
+  x.strokeStyle='#f0c4a2';line([(-11+stride)*scale,y+145*scale],[(-18+stride)*scale,y+148*scale],6*scale);line([(11-stride)*scale,y+145*scale],[(18-stride)*scale,y+148*scale],6*scale);
+  // torso
+  x.fillStyle=d.shirt;x.beginPath();x.roundRect(-29*scale,y+58*scale,58*scale,55*scale,13*scale);x.fill();
+  // arms
+  let arm=Math.sin(phase*(moving?7:3))*18*scale;
+  x.strokeStyle=d.skin;line([-25*scale,y+67*scale],[-37*scale,y+105*scale+arm],9*scale);line([25*scale,y+67*scale],[37*scale,y+105*scale-arm],9*scale);
+  if(action==='wave'){line([28*scale,y+70*scale],[48*scale,y+42*scale],9*scale);line([48*scale,y+42*scale],[43*scale,y+25*scale],6*scale)}
+  if(action==='point'){line([27*scale,y+72*scale],[55*scale,y+60*scale],8*scale)}
+  // neck/head
+  x.fillStyle=d.skin;x.fillRect(-8*scale,y+48*scale,16*scale,18*scale);ell(0,y+30*scale,head,head,d.skin);
+  // hair
+  x.fillStyle=d.hair;x.beginPath();x.arc(0,y+25*scale,head+2*scale,Math.PI,Math.PI*2);x.lineTo(34*scale,y+31*scale);x.quadraticCurveTo(20*scale,y-3*scale,0,y+2*scale);x.quadraticCurveTo(-25*scale,y-3*scale,-37*scale,y+28*scale);x.closePath();x.fill();
+  // eyes
+  let blink=(Math.floor(phase*1.4)%7===0 && phase%1<.16);
+  x.strokeStyle='#202436';x.lineWidth=3*scale;
+  if(blink){line([-15*scale,y+31*scale],[-7*scale,y+31*scale],3*scale);line([7*scale,y+31*scale],[15*scale,y+31*scale],3*scale)}
+  else{ell(-11*scale,y+31*scale,4*scale,7*scale,'#26304a');ell(11*scale,y+31*scale,4*scale,7*scale,'#26304a');ell(-10*scale,y+28*scale,1.5*scale,2*scale,'#fff');ell(12*scale,y+28*scale,1.5*scale,2*scale,'#fff')}
+  // mouth
+  x.strokeStyle='#713d4b';x.lineWidth=2*scale;x.beginPath();x.arc(0,y+49*scale,7*scale,0,Math.PI);x.stroke();
+  if(mood==='happy'||mood==='love'){x.beginPath();x.arc(0,y+46*scale,9*scale,0,Math.PI);x.stroke()}
+  if(mood==='sad'){x.beginPath();x.arc(0,y+54*scale,7*scale,Math.PI,Math.PI*2);x.stroke()}
+  if(mood==='surprised'){ell(0,y+49*scale,5*scale,7*scale,'#713d4b')}
+  if(action==='talk'){let q=4+Math.abs(Math.sin(phase*12))*6;ell(0,y+49*scale,q*scale,q*.55*scale,'#713d4b')}
+  x.restore();
 }
-function blinkState(t,seed){
-  const q=(t+seed)*1.7;
-  return Math.sin(q)>0.985 || Math.sin(q*0.71)>0.992;
+function animal(ch,px,ground,phase,mood,action,scale=1,flip=1){
+  let d=chars[ch], run=action==='run'||action==='walk', bob=run?Math.sin(phase*(action==='run'?14:8))*5:Math.sin(phase*2)*2;
+  x.save();x.translate(px,0);x.scale(flip,1);x.fillStyle='#0003';x.beginPath();x.ellipse(0,ground+2,48*scale,8*scale,0,0,Math.PI*2);x.fill();
+  let y=ground-62*scale+bob;
+  let stride=run?Math.sin(phase*(action==='run'?14:8))*20*scale:0;
+  x.strokeStyle=d.fur;x.lineWidth=9*scale;
+  line([-25*scale,y+35*scale],[-34*scale-stride*.35,y+67*scale],9*scale);line([25*scale,y+35*scale],[34*scale+stride*.35,y+67*scale],9*scale);
+  x.fillStyle=d.fur;x.beginPath();x.ellipse(0,y+25*scale,58*scale,36*scale,0,0,Math.PI*2);x.fill();
+  // tail
+  x.strokeStyle=d.fur;x.lineWidth=10*scale;x.beginPath();x.moveTo(-48*scale,y+25*scale);x.quadraticCurveTo(-78*scale,y-10*scale,-58*scale,y-28*scale);x.stroke();
+  // head/ears
+  ell(48*scale,y-3*scale,32*scale,29*scale,d.fur);
+  poly([[27*scale,y-22*scale],[32*scale,y-52*scale],[50*scale,y-27*scale]],d.fur);
+  poly([[62*scale,y-27*scale],[77*scale,y-51*scale],[79*scale,y-13*scale]],d.fur);
+  ell(39*scale,y-6*scale,4*scale,7*scale,'#202536');ell(59*scale,y-6*scale,4*scale,7*scale,'#202536');
+  ell(38*scale,y-8*scale,1.5*scale,2*scale,'#fff');ell(58*scale,y-8*scale,1.5*scale,2*scale,'#fff');
+  ell(50*scale,y+8*scale,5*scale,4*scale,'#302333');
+  if(action==='talk'){ell(50*scale,y+16*scale,6*scale,5*scale,'#713d4b')}
+  if(action==='wave'){line([35*scale,y+17*scale],[63*scale,y-18*scale],8*scale)}
+  x.restore();
 }
-function human(x,ground,t,s,kind,dir=1,seed=0){
-  const move=s.action==='walk'||s.action==='run';
-  const fast=s.action==='run';
-  const cycle=t*(fast?13:7.5);
-  const step=move?Math.sin(cycle):0;
-  const bob=move?Math.abs(Math.sin(cycle))*3:Math.sin(t*2.1+seed)*1.2;
-  const jump=s.action==='jump'?Math.abs(Math.sin(t*5.5))*55:0;
-  const talking=s.action==='talk' || /\b(?:disse|falou|respondeu|perguntou|conversou)\b/i.test(s.text||'');
-  const waving=s.action==='wave';
-  const blink=blinkState(t,seed);
-  const skin='#efb47e', hair='#543821', shirt=kind==='girl'?'#e56b9f':'#3278e0', pants='#29416e';
-  ctx.save();
-  ctx.translate(x,ground-bob-jump);
-  ctx.scale(dir,1);
-  // Sombra no chão
-  ctx.save();ctx.scale(1,.3);circle(0,5,42,'rgba(0,0,0,.16)');ctx.restore();
-
-  // Corpo
-  ctx.fillStyle=shirt;ctx.beginPath();ctx.roundRect(-25,-143,50,72,14);ctx.fill();
-  rect(-8,-151,16,14,skin);
-
-  // Pernas: quadril -> joelho -> pé. Isso evita as pernas "nascendo" na barriga.
-  const swing=move?step*0.48:0;
-  const kneeY=-36;
-  const footY=2;
-  const hipL={x:-13,y:-70}, hipR={x:13,y:-70};
-  const kneeL={x:-13+Math.sin(swing)*25,y:kneeY}, kneeR={x:13-Math.sin(swing)*25,y:kneeY};
-  const footL={x:kneeL.x+Math.sin(swing)*18+dir*7,y:footY};
-  const footR={x:kneeR.x-Math.sin(swing)*18+dir*7,y:footY};
-  line(hipL.x,hipL.y,kneeL.x,kneeL.y,pants,14);line(kneeL.x,kneeL.y,footL.x,footL.y,pants,13);
-  line(hipR.x,hipR.y,kneeR.x,kneeR.y,pants,14);line(kneeR.x,kneeR.y,footR.x,footR.y,pants,13);
-  line(footL.x-1,footL.y,footL.x+13,footL.y,pants,8);line(footR.x-1,footR.y,footR.x+13,footR.y,pants,8);
-
-  // Braços
-  let a1=move?Math.PI/2-swing*.9:Math.PI/2+0.12;
-  let a2=move?Math.PI/2+swing*.9:Math.PI/2-0.12;
-  if(waving)a2=-1.55+Math.sin(t*10)*0.25;
-  if(talking){a1=Math.PI/2+Math.sin(t*6)*0.10;a2=Math.PI/2-Math.sin(t*6)*0.10;}
-  const arm1=limb(-22,-130,56,a1,skin,12), arm2=limb(22,-130,56,a2,skin,12);
-  circle(arm1.x,arm1.y,7,skin);circle(arm2.x,arm2.y,7,skin);
-
-  // Cabeça/cabelo
-  circle(0,-179,32,skin);
-  ctx.fillStyle=hair;ctx.beginPath();ctx.arc(0,-190,33,Math.PI,2*Math.PI);ctx.fill();
-  if(kind==='girl'){ctx.fillStyle=hair;ctx.fillRect(-34,-191,9,54);ctx.fillRect(25,-191,9,54);}
-
-  // Olhos
-  if(blink){line(-18,-181,-7,-181,'#263247',3);line(7,-181,18,-181,'#263247',3)}
-  else{circle(-11,-181,3,'#263247');circle(11,-181,3,'#263247');}
-
-  // Boca: uma única forma por vez, sempre pequena e centralizada.
-  if(talking){
-    const open=1.5+Math.abs(Math.sin(t*12))*2.8;
-    ctx.fillStyle='#7e3440';ctx.beginPath();ctx.ellipse(0,-163,5,open,0,0,Math.PI*2);ctx.fill();
-  }else if(s.mood==='surprised'){
-    ctx.strokeStyle='#823c40';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,-163,5,0,Math.PI*2);ctx.stroke();
-  }else if(s.mood==='sad'){
-    ctx.strokeStyle='#823c40';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,-158,8,Math.PI,2*Math.PI);ctx.stroke();
-  }else{
-    ctx.strokeStyle='#823c40';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,-166,8,0,Math.PI);ctx.stroke();
-  }
-  ctx.restore();
+function robot(px,ground,phase,scale=1){
+  let y=ground-145*scale;x.fillStyle='#0003';x.beginPath();x.ellipse(px,ground,42*scale,8*scale,0,0,Math.PI*2);x.fill();
+  x.fillStyle='#aebbd0';x.fillRect(px-30*scale,y+45*scale,60*scale,70*scale);rr(px-32*scale,y,64*scale,55*scale,16*scale,'#c7d2e3');
+  ell(px-12*scale,y+25*scale,5*scale,7*scale,'#62d7ff');ell(px+12*scale,y+25*scale,5*scale,7*scale,'#62d7ff');
+  x.strokeStyle='#aebbd0';line([px-27*scale,y+65*scale],[px-50*scale,y+100*scale],10*scale);line([px+27*scale,y+65*scale],[px+50*scale,y+100*scale],10*scale);
+  line([px-16*scale,y+115*scale],[px-22*scale,y+145*scale],11*scale);line([px+16*scale,y+115*scale],[px+22*scale,y+145*scale],11*scale);
 }
-function animal(x,ground,t,s,kind,dir=1,seed=0){
-  const dog=kind==='dog', move=s.action==='walk'||s.action==='run', fast=s.action==='run';
-  const cycle=t*(fast?15:8.5), step=move?Math.sin(cycle):0, bob=move?Math.abs(step)*3:Math.sin(t*2+seed)*2;
-  const fur=dog?'#c8945b':'#aaa5b8', dark=dog?'#86552e':'#858097';
-  ctx.save();ctx.translate(x,ground-bob);ctx.scale(dir,1);
-  ctx.save();ctx.scale(1,.3);circle(0,4,52,'rgba(0,0,0,.16)');ctx.restore();
-  ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(0,-49,54,36,0,0,Math.PI*2);ctx.fill();
-  line(-32,-33,-35+step*15,0,fur,16);line(29,-33,33-step*15,0,fur,16);
-  line(-44,-57,-70,-80+Math.sin(t*8)*8,fur,12);
-  circle(38,-90,33,fur);
-  ctx.fillStyle=dark;ctx.beginPath();
-  if(dog){ctx.ellipse(15,-108,13,29,-.3,0,Math.PI*2);ctx.ellipse(60,-107,13,29,.3,0,Math.PI*2)}
-  else{ctx.moveTo(12,-107);ctx.lineTo(17,-139);ctx.lineTo(37,-117);ctx.moveTo(46,-117);ctx.lineTo(68,-139);ctx.lineTo(68,-102)}ctx.fill();
-  const blink=blinkState(t,seed+.4);
-  if(blink){line(23,-95,32,-95,'#1f2937',3);line(43,-95,52,-95,'#1f2937',3)}
-  else{circle(27,-95,4,'#1f2937');circle(50,-95,4,'#1f2937');}
-  circle(39,-80,5,'#1f2937');
-  if(s.action==='talk'){ctx.fillStyle='#7a3440';ctx.beginPath();ctx.ellipse(39,-72,7,3+Math.abs(Math.sin(t*12))*3,0,0,Math.PI*2);ctx.fill()}
-  ctx.restore();
+function alien(px,ground,phase,scale=1){
+  let y=ground-150*scale;x.fillStyle='#0003';x.beginPath();x.ellipse(px,ground,42*scale,8*scale,0,0,Math.PI*2);x.fill();
+  ell(px,y+40*scale,38*scale,52*scale,'#8ad4ba');ell(px,y,42*scale,47*scale,'#8ad4ba');
+  ell(px-14*scale,y+2*scale,9*scale,15*scale,'#34285b');ell(px+14*scale,y+2*scale,9*scale,15*scale,'#34285b');
+  x.fillStyle='#7056e8';x.beginPath();x.arc(px,y-3*scale,40*scale,Math.PI,Math.PI*2);x.fill();
+  line([px-14*scale,y+88*scale],[px-25*scale,y+145*scale],9*scale);line([px+14*scale,y+88*scale],[px+25*scale,y+145*scale],9*scale);
 }
-function draw(t=0){
-  const s=scenes[selected]; if(!s)return;
-  ctx.clearRect(0,0,W,H); background(s.background,t);
-  const duration=Math.max(1,s.duration), p=Math.min(1,t/duration);
-  const moving=s.action==='walk'||s.action==='run';
-  const txt=norm(s.text||'');
-  const hasSecond=s.second!=='none';
-  const ground=s.background==='city'?475:410;
-
-  // Posições especiais para ações de encontro/interação.
-  // O personagem que está no campo "Personagem principal" é sempre quem executa a ação.
-  let mainX=350, secondX=735;
-  const isApproach=/\b(correu|correu|corre|correndo|caminhou|andou|foi|foi ate|foi até)\b/.test(txt);
-  const isToOther=/\b(ate|até|para)\b/.test(txt) && hasSecond;
-
-  if(s.action==='run' && hasSecond && isToOther){
-    // Quem corre é o principal: ele parte de um lado e chega perto do secundário.
-    if(s.actor==='dog'||s.actor==='cat'){
-      secondX=350;
-      mainX=760-(410*p);
-    }else{
-      secondX=760;
-      mainX=200+(560*p);
-    }
-  }else if(moving){
-    mainX=120+610*p;
-  }
-
-  // Acenar para alguém: personagens ficam em lugares estáveis.
-  if(s.action==='wave' && hasSecond){
-    mainX=330; secondX=690;
-  }
-
-  // Falar com alguém: aproxima um pouco os dois, sem fazer o secundário correr.
-  if(s.action==='talk' && hasSecond){
-    mainX=390; secondX=610;
-  }
-
-  // Interação genérica de encontro.
-  if(!moving && s.action!=='wave' && s.action!=='talk' && /encontr/.test(txt) && hasSecond){
-    mainX=350; secondX=650;
-  }
-
-  ctx.save();
-  // Câmera suave acompanha apenas o personagem principal.
-  let camera=0;
-  if(moving) camera=Math.max(0,(mainX-500)*.18);
-  ctx.translate(-camera,0);
-
-  // Personagem secundário: fica parado/respirando, a menos que a frase diga explicitamente
-  // que ELE é quem executa a ação. Isso evita o bug "cachorro correu" -> menino corre.
-  if(hasSecond){
-    const sec={...s,action:'idle'};
-    const secDir=secondX<mainX?1:-1;
-    if(s.second==='dog'||s.second==='cat') animal(secondX,ground,t,sec,s.second,secDir,3);
-    else human(secondX,ground,t,sec,s.second,secDir,3);
-  }
-
-  // Principal é sempre o único personagem que recebe a ação da cena.
-  let dir=1;
-  if(s.action==='run' && hasSecond && isToOther){
-    dir=mainX<secondX?1:-1;
-  }else if(s.action==='walk'||s.action==='run'){
-    dir=1;
-  }else if(hasSecond){
-    dir=mainX<secondX?1:-1;
-  }
-
-  if(s.actor==='dog'||s.actor==='cat') animal(mainX,ground,t,s,s.actor,dir,1);
-  else human(mainX,ground,t,s,s.actor,dir,1);
-
-  if(moving){
-    for(let i=0;i<5;i++){
-      const px=mainX-30-i*18-(t*35%18),py=ground-3+(i%2)*3;
-      circle(px,py,2,'rgba(255,255,255,.35)');
-    }
-  }
-  ctx.restore();
-
-  const text=s.text||'';
-  if(text){
-    const lines=wrap(text,57),h=lines.length*25+24;
-    ctx.fillStyle='rgba(255,255,255,.96)';
-    ctx.beginPath();ctx.roundRect(90,H-h-13,W-180,h,16);ctx.fill();
-    ctx.fillStyle='#17243b';ctx.textAlign='center';ctx.font='bold 21px system-ui';
-    lines.forEach((l,i)=>ctx.fillText(l,W/2,H-h+18+i*25));
-    ctx.textAlign='start';
-  }
+function drawChar(ch,px,ground,phase,mood,action,scale=1,flip=1){
+  if(!ch||ch==='none')return;
+  let d=chars[ch];
+  if(d.type==='human')human(ch,px,ground,phase,mood,action,scale,flip);
+  else if(d.type==='animal')animal(ch,px,ground,phase,mood,action,scale,flip);
+  else if(d.type==='robot')robot(px,ground,phase,scale);
+  else alien(px,ground,phase,scale);
 }
-function wrap(text,n){let words=text.split(/\s+/),lines=[''];for(let w of words){let i=lines.length-1;if((lines[i]+' '+w).length>n&&lines[i])lines.push(w);else lines[i]+=(lines[i]?' ':'')+w}return lines.slice(0,4)}
-$('generate').onclick=
+
+/* ---------- story interpreter ---------- */
+function interpret(s,prev){
+  let q=s.toLowerCase(), actor=prev?.actor||'girl', second=prev?.second||'none';
+  const detect=(tests,key)=>tests.some(z=>q.includes(z))?key:null;
+  actor=detect([ 'cachorro','cão','dog'],'dog')||detect(['gato','cat'],'cat')||detect(['raposa'],'fox')||detect(['lobo'],'wolf')||detect(['robô','robo'],'robot')||detect(['alienígena','alien'],'alien')||detect(['menino','garoto','ele '],'boy')||detect(['menina','garota','ela '],'girl')||actor;
+  if(q.includes('encontr')||q.includes('viu')||q.includes('com ')){
+    if(actor==='dog'||actor==='cat'||actor==='fox'||actor==='wolf')second= q.includes('menino')?'boy':'girl';
+    else if(actor==='boy'||actor==='girl')second=q.includes('cachorro')?'dog':q.includes('gato')?'cat':(q.includes('menina')?'girl':'none');
+  }
+  let action='idle';
+  if(/correu|corre|correr/.test(q))action='run';else if(/caminhou|caminha|andou|andar/.test(q))action='walk';else if(/acenou|acena|acenar/.test(q))action='wave';else if(/pulou|pula|pular/.test(q))action='jump';else if(/dançou|danca|dança/.test(q))action='dance';else if(/sentou|senta/.test(q))action='sit';else if(/apontou|aponta/.test(q))action='point';else if(/pensou|pensa/.test(q))action='think';else if(/disse|falou|fala|convers/.test(q))action='talk';
+  let bg=prev?.background||'park';
+  if(/casa|quarto/.test(q))bg=q.includes('quarto')?'bedroom':'home';else if(/parque/.test(q))bg='park';else if(/cidade|rua/.test(q))bg='city';else if(/escola/.test(q))bg='school';else if(/praia|mar/.test(q))bg='beach';else if(/floresta/.test(q))bg='forest';else if(/montanha/.test(q))bg='mountain';else if(/templo|santuário|santuario/.test(q))bg='shrine';else if(/espaço|espaco|planeta/.test(q))bg='space';else if(/chuva|choveu|chovendo/.test(q))bg='rain';else if(/noite/.test(q))bg='night';else if(/entardecer|pôr do sol|por do sol/.test(q))bg='sunset';else if(/festa|festival/.test(q))bg='festival';else if(/futur|neon|cyber/.test(q))bg='cyber';else if(/café|cafe/.test(q))bg='cafe';
+  let mood=/bravo|raiva/.test(q)?'angry':/triste|chorou/.test(q)?'sad':/surpres/.test(q)?'surprised':/amor|gostou|feliz|alegre|brinc/.test(q)?'happy':'neutral';
+  let camera=action==='run'?'follow':action==='talk'?'medium':'wide';
+  return {text:s,actor,second,background:bg,action,mood,camera,duration:Math.max(3,Math.min(9,3+s.length/35))};
+}
+function generate(){
+  let lines=$('story').value.split(/[\n.!?]+/).map(s=>s.trim()).filter(Boolean),prev=null;
+  scenes=lines.map(s=>{let z=interpret(s,prev);prev=z;return z});
+  if(!scenes.length)scenes=[interpret('Uma garota caminhou no parque.',null)];
+  cur=0;elapsed=0;renderTimeline();loadEditor();draw(0);
+}
+function demo(){
+  scenes=[
+    {text:'Uma garota caminhava pela cidade ao entardecer.',actor:'girl',second:'none',background:'sunset',action:'walk',mood:'happy',camera:'wide',duration:5},
+    {text:'Ela encontrou um cachorro no parque.',actor:'girl',second:'dog',background:'park',action:'walk',mood:'surprised',camera:'medium',duration:5},
+    {text:'O cachorro correu até ela.',actor:'dog',second:'girl',background:'park',action:'run',mood:'happy',camera:'follow',duration:5},
+    {text:'A garota acenou e sorriu.',actor:'girl',second:'dog',background:'park',action:'wave',mood:'happy',camera:'close',duration:4},
+  
