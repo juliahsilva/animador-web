@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animador Web V4</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#f8fafc;font:15px system-ui,Arial}header{background:#202d43;padding:18px;text-align:center;font-size:23px;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:15px}.panel{background:#202d43;padding:18px;border-radius:16px;margin:16px 0}textarea,input,select{width:100%;padding:12px;background:#101827;border:1px solid #64748b;border-radius:9px;color:white;font:inherit}textarea{min-height:140px;resize:vertical}label{display:block;margin:12px 0 6px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 15px;font:inherit;cursor:pointer}button:active{transform:scale(.98)}.green{background:#159447}.purple{background:#7c3aed}.red{background:#c62828}.gray{background:#526178}canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background:#8ed5fc}.timeline{display:flex;overflow-x:auto;gap:9px;padding:10px 0}.shot{min-width:120px;max-width:120px;text-align:left;background:#34435b;border:2px solid transparent;border-radius:10px;padding:10px;cursor:pointer}.shot.active{border-color:#8dbdff;background:#204d91}.shot small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{color:#9af0bb;min-height:24px}.hint{color:#cad5e6;line-height:1.5;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}h2{margin-top:0}</style></head><body><header>🎬 Animador Web V4 — Estúdio 2D</header><main class="wrap"><section class="panel"><h2>✨ Diretor automático</h2><label for="story">Sua história</label><textarea id="story">Um menino estava em casa.
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Animador Web V5</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#f8fafc;font:15px system-ui,Arial}header{background:#202d43;padding:18px;text-align:center;font-size:23px;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:15px}.panel{background:#202d43;padding:18px;border-radius:16px;margin:16px 0}textarea,input,select{width:100%;padding:12px;background:#101827;border:1px solid #64748b;border-radius:9px;color:white;font:inherit}textarea{min-height:140px;resize:vertical}label{display:block;margin:12px 0 6px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 15px;font:inherit;cursor:pointer}button:active{transform:scale(.98)}.green{background:#159447}.purple{background:#7c3aed}.red{background:#c62828}.gray{background:#526178}canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background:#8ed5fc}.timeline{display:flex;overflow-x:auto;gap:9px;padding:10px 0}.shot{min-width:120px;max-width:120px;text-align:left;background:#34435b;border:2px solid transparent;border-radius:10px;padding:10px;cursor:pointer}.shot.active{border-color:#8dbdff;background:#204d91}.shot small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{color:#9af0bb;min-height:24px}.hint{color:#cad5e6;line-height:1.5;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}h2{margin-top:0}</style></head><body><header>🎬 Animador Web V5 — Estúdio 2D<br><small style="font-size:12px;font-weight:500;opacity:.8">Motor de personagens com caminhada, fala, piscada, gestos e câmera</small></header><main class="wrap"><section class="panel"><h2>✨ Diretor automático</h2><label for="story">Sua história</label><textarea id="story">Um menino estava em casa.
 Ele caminhou até o parque.
 No parque, encontrou um cachorro.
 O menino acenou para o cachorro.
@@ -11,12 +11,18 @@ const make=(text='Nova cena')=>({text,actor:'boy',second:'none',background:'home
 scenes=[make('Um menino estava em casa.')];
 const say=s=>$('status').textContent=s;
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-function interpret(sentence,prev){let t=norm(sentence),s={...prev,text:sentence,duration:Math.max(3,Math.min(10,Math.ceil(sentence.length/16)))};
-if(/espaco|planeta|lua|foguete/.test(t))s.background='space';else if(/parque|floresta|jardim/.test(t))s.background='park';else if(/cidade|rua|predio/.test(t))s.background='city';else if(/casa|quarto|cozinha/.test(t))s.background='home';
-let mentionsDog=/cachorro|cao|cachorrinho/.test(t),mentionsCat=/gato|gatinho/.test(t),mentionsBoy=/menino|garoto/.test(t),mentionsGirl=/menina|garota/.test(t);
-if((mentionsDog||mentionsCat)&&(mentionsBoy||mentionsGirl)){s.actor=mentionsBoy?'boy':'girl';s.second=mentionsDog?'dog':'cat'}else if(mentionsDog){if(prev.actor==='boy'||prev.actor==='girl'){s.second='dog';if(/cachorro (correu|andou|pulou|disse)/.test(t)){s.actor='dog';s.second=prev.actor}}else s.actor='dog'}else if(mentionsCat){s.second=prev.actor==='boy'||prev.actor==='girl'?'cat':'none';if(s.second==='none')s.actor='cat'}else if(mentionsBoy||mentionsGirl){s.actor=mentionsBoy?'boy':'girl';if(!/cachorro|gato/.test(t))s.second='none'}
-if(/correu|correndo|correr/.test(t))s.action='run';else if(/caminhou|andou|andando|saiu|foi/.test(t))s.action='walk';else if(/acenou|acenar/.test(t))s.action='wave';else if(/pulou|pular|saltou/.test(t))s.action='jump';else if(/disse|falou|respondeu|perguntou/.test(t))s.action='talk';else s.action='idle';
-s.mood=/triste|chorou/.test(t)?'sad':/surpres|assustad|uau/.test(t)?'surprised':'happy';return s}
+function interpret(sentence,prev){
+  let t=norm(sentence),s={...prev,text:sentence,duration:Math.max(3,Math.min(10,Math.ceil(sentence.length/16)))};
+  if(/espaco|planeta|lua|foguete/.test(t))s.background='space';else if(/parque|floresta|jardim|bosque/.test(t))s.background='park';else if(/cidade|rua|predio|avenida/.test(t))s.background='city';else if(/casa|quarto|cozinha/.test(t))s.background='home';
+  let dog=/cachorro|cao|cachorrinho/.test(t),cat=/gato|gatinho/.test(t),boy=/menino|garoto/.test(t),girl=/menina|garota/.test(t);
+  if((dog||cat)&&(boy||girl)){s.actor=boy?'boy':'girl';s.second=dog?'dog':'cat'}
+  else if(dog){if(prev.actor==='boy'||prev.actor==='girl'){s.second='dog';if(/cachorro (correu|andou|pulou|disse|falou)/.test(t)){s.actor='dog';s.second=prev.actor}}else s.actor='dog'}
+  else if(cat){s.second=prev.actor==='boy'||prev.actor==='girl'?'cat':'none';if(s.second==='none')s.actor='cat'}
+  else if(boy||girl){s.actor=boy?'boy':'girl';if(!/cachorro|gato/.test(t))s.second='none'}
+  if(/correu|correndo|correr/.test(t))s.action='run';else if(/caminhou|andou|andando|saiu|foi/.test(t))s.action='walk';else if(/acenou|acenar|acenando/.test(t))s.action='wave';else if(/pulou|pular|saltou/.test(t))s.action='jump';else if(/disse|falou|respondeu|perguntou|conversou/.test(t))s.action='talk';else s.action='idle';
+  s.mood=/triste|chorou|choro/.test(t)?'sad':/surpres|assustad|uau|espant/.test(t)?'surprised':/feliz|alegre|brinc/.test(t)?'happy':'happy';
+  return s;
+}
 function generate(){let parts=$('story').value.split(/\n+|(?<=[.!?])\s+/).map(x=>x.trim()).filter(Boolean).slice(0,50);if(!parts.length){say('⚠️ Escreva uma história primeiro.');return false}stop();let prev=make();scenes=parts.map(p=>(prev=interpret(p,prev)));selected=0;elapsed=0;sync();say(`✨ ${scenes.length} cenas criadas!`);return true}
 function sync(){let s=scenes[selected];if(!s)return;for(let [id,key] of [['line','text'],['actor','actor'],['second','second'],['background','background'],['action','action'],['mood','mood'],['duration','duration']])$(id).value=s[key];timeline();draw(elapsed)}
 function timeline(){let el=$('timeline');el.replaceChildren();scenes.forEach((s,i)=>{let b=document.createElement('button');b.className='shot'+(i===selected?' active':'');let title=document.createElement('strong'),small=document.createElement('small');title.textContent=`Cena ${i+1} · ${s.duration}s`;small.textContent=s.text;b.append(title,small);b.onclick=()=>{stop();selected=i;sync();say(`🎬 Cena ${i+1}`)};el.append(b)})}
@@ -28,15 +34,122 @@ function cloud(x,y){circle(x,y,26,'#fff');circle(x+28,y-12,34,'#fff');circle(x+5
 function tree(x,y,k=1){ctx.save();ctx.translate(x,y);ctx.scale(k,k);rect(-10,-125,20,125,'#895735');circle(-40,-145,48,'#288a48');circle(20,-164,56,'#39a857');circle(54,-136,39,'#2b9549');ctx.restore()}
 function house(x,y){rect(x-90,y-120,180,120,'#f8e8c8');ctx.fillStyle='#b94d42';ctx.beginPath();ctx.moveTo(x-112,y-120);ctx.lineTo(x,y-215);ctx.lineTo(x+112,y-120);ctx.fill();rect(x-18,y-66,38,66,'#8d5a3a');rect(x-69,y-90,34,35,'#8acdf4');rect(x+35,y-90,34,35,'#8acdf4')}
 function background(kind,t){if(kind==='space'){rect(0,0,W,H,'#10112f');for(let i=0;i<65;i++){let x=(i*137+73)%960,y=(i*79+17)%420;circle(x,y,i%3+1,'#fff')}circle(770,120,62,'#ffd37a');ctx.fillStyle='#45416c';ctx.beginPath();ctx.ellipse(480,570,800,160,0,0,Math.PI*2);ctx.fill();return}rect(0,0,W,H,kind==='city'?'#a9c2e0':'#87d3fc');cloud(130+Math.sin(t*.15)*18,100);cloud(520,65);circle(810,88,43,'#ffe06b');if(kind==='city'){for(let i=0;i<9;i++){let h=130+(i*53)%145;rect(i*125-25,395-h,112,h,'#617f9e');for(let a=0;a<3;a++)for(let b=0;b<4;b++)rect(i*125+a*30,410-h+b*29,14,16,'#f7e7a7')}rect(0,395,W,145,'#626d78');rect(0,475,W,8,'#e5e7eb');return}rect(0,365,W,175,kind==='park'?'#6dbd57':'#76ba50');ctx.fillStyle='#80c86a';ctx.beginPath();ctx.ellipse(220,380,390,85,0,Math.PI,2*Math.PI);ctx.fill();if(kind==='home'){house(515,390);tree(790,393,1.15)}else{tree(145,390,1.1);tree(800,390,1.25);for(let i=0;i<15;i++)circle((i*83)%950,395+(i*19)%100,4,i%2?'#ffdb4f':'#f48fb1')}}
-function human(x,ground,t,s,kind){let move=s.action==='walk'||s.action==='run',speed=s.action==='run'?13:8,phase=t*speed,step=move?Math.sin(phase):0,bob=move?Math.abs(Math.sin(phase))*6:Math.sin(t*2)*2,jump=s.action==='jump'?Math.abs(Math.sin(t*5))*60:0,wave=s.action==='wave';ctx.save();ctx.translate(x,ground-bob-jump);let shirt=kind==='girl'?'#f071a5':'#3278e0',skin='#efb47e';circle(0,-179,32,skin);ctx.fillStyle='#553823';ctx.beginPath();ctx.arc(0,-190,33,Math.PI,2*Math.PI);ctx.fill();if(kind==='girl'){ctx.fillStyle='#553823';ctx.fillRect(-34,-191,9,53);ctx.fillRect(25,-191,9,53)}circle(-11,-179,3,'#253149');circle(11,-179,3,'#253149');if(s.mood==='surprised')circle(0,-164,6,'#823c40');else if(s.mood==='sad'){line(-8,-163,8,-163,'#823c40',2)}else{ctx.strokeStyle='#823c40';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-173,10,0,Math.PI);ctx.stroke()}rect(-24,-143,48,75,shirt);line(-17,-72,-19-step*19,0,'#243e70',15);line(17,-72,19+step*19,0,'#243e70',15);line(-24,-132,-42+step*15,-85,skin,13);if(wave)line(24,-132,42+Math.sin(t*12)*8,-188,skin,13);else line(24,-132,42-step*15,-85,skin,13);ctx.restore()}
-function animal(x,ground,t,s,kind){let dog=kind==='dog',move=['walk','run'].includes(s.action),step=move?Math.sin(t*(s.action==='run'?15:9))*13:0,bob=move?Math.abs(step)*.25:Math.sin(t*2)*2;ctx.save();ctx.translate(x,ground-bob);let fur=dog?'#ca965b':'#a8a4b6';ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(0,-49,54,36,0,0,Math.PI*2);ctx.fill();line(-32,-33,-35+step,0,fur,16);line(29,-33,33-step,0,fur,16);line(-44,-57,-70,-80+Math.sin(t*9)*10,fur,12);circle(38,-90,33,fur);ctx.fillStyle=dog?'#86552e':'#858097';ctx.beginPath();if(dog){ctx.ellipse(15,-108,13,29,-.3,0,Math.PI*2);ctx.ellipse(60,-107,13,29,.3,0,Math.PI*2)}else{ctx.moveTo(12,-107);ctx.lineTo(17,-139);ctx.lineTo(37,-117);ctx.moveTo(46,-117);ctx.lineTo(68,-139);ctx.lineTo(68,-102)}ctx.fill();circle(29,-95,4,'#1f2937');circle(51,-95,4,'#1f2937');circle(42,-80,5,'#1f2937');if(s.mood==='happy')line(39,-74,50,-71,'#773b42',2);ctx.restore()}
-function draw(t=0){let s=scenes[selected];if(!s)return;ctx.clearRect(0,0,W,H);background(s.background,t);let duration=Math.max(1,s.duration),p=Math.min(1,t/duration),move=['walk','run'].includes(s.action),x=move?120+610*p:330;let camera=move?Math.max(0,(x-520)*.25):0;ctx.save();ctx.translate(-camera,0);let ground=s.background==='city'?475:410;let actor=(kind,px,secondary=false)=>{let act=secondary?{...s,action:'idle'}:s;if(kind==='dog'||kind==='cat')animal(px,ground,t,act,kind);else human(px,ground,t,act,kind)};if(s.second!=='none')actor(s.second,735,true);actor(s.actor,x);ctx.restore();let text=s.text||'';if(text){let lines=wrap(text,57);let h=lines.length*25+24;ctx.fillStyle='rgba(255,255,255,.95)';ctx.beginPath();ctx.roundRect(90,H-h-13,W-180,h,16);ctx.fill();ctx.fillStyle='#17243b';ctx.textAlign='center';ctx.font='bold 21px system-ui';lines.forEach((l,i)=>ctx.fillText(l,W/2,H-h+18+i*25));ctx.textAlign='start'}}
+function limb(x1,y1,len,ang,color,width=12){
+  const x2=x1+Math.cos(ang)*len, y2=y1+Math.sin(ang)*len;
+  line(x1,y1,x2,y2,color,width);
+  return {x:x2,y:y2};
+}
+function blinkState(t,seed){
+  const q=(t+seed)*1.7;
+  return Math.sin(q)>0.985 || Math.sin(q*0.71)>0.992;
+}
+function human(x,ground,t,s,kind,dir=1,seed=0){
+  const move=s.action==='walk'||s.action==='run';
+  const fast=s.action==='run';
+  const cycle=t*(fast?13:7.5);
+  const step=move?Math.sin(cycle):0;
+  const bob=move?Math.abs(Math.sin(cycle))*4:Math.sin(t*2.1+seed)*1.5;
+  const jump=s.action==='jump'?Math.abs(Math.sin(t*5.5))*70:0;
+  const talking=s.action==='talk' || /disse|falou|respondeu|perguntou/i.test(s.text||'');
+  const waving=s.action==='wave';
+  const blink=blinkState(t,seed);
+  const skin='#efb47e', hair='#543821', shirt=kind==='girl'?'#e56b9f':'#3278e0', pants='#29416e';
+  ctx.save();
+  ctx.translate(x,ground-bob-jump);
+  ctx.scale(dir,1);
+  // soft shadow
+  ctx.save(); ctx.scale(1,0.35); circle(0,4,43,'rgba(0,0,0,.16)'); ctx.restore();
+  // torso
+  ctx.fillStyle=shirt; ctx.beginPath(); ctx.roundRect(-25,-143,50,72,14); ctx.fill();
+  // neck
+  rect(-8,-151,16,14,skin);
+  // legs with walk cycle
+  const legA=move?(-Math.PI/2 + step*0.42):-Math.PI/2;
+  const legB=move?(-Math.PI/2 - step*0.42):-Math.PI/2;
+  const l1=limb(-14,-72,72,legA,pants,14);
+  const l2=limb(14,-72,72,legB,pants,14);
+  line(l1.x,l1.y,l1.x+dir*10,l1.y,pants,7); line(l2.x,l2.y,l2.x+dir*10,l2.y,pants,7);
+  // arms
+  let a1=move?Math.PI/2-step*0.55:Math.PI/2+0.15;
+  let a2=move?Math.PI/2+step*0.55:Math.PI/2-0.15;
+  if(waving) a2=-1.55+Math.sin(t*10)*0.28;
+  if(talking){a1=Math.PI/2+Math.sin(t*6)*0.12; a2=Math.PI/2-Math.sin(t*6)*0.12;}
+  limb(-22,-130,56,a1,skin,12); limb(22,-130,56,a2,skin,12);
+  // hand for wave
+  if(waving){circle(22+Math.cos(a2)*56, -130+Math.sin(a2)*56, 8, skin);}
+  // head + hair
+  circle(0,-179,32,skin);
+  ctx.fillStyle=hair; ctx.beginPath(); ctx.arc(0,-190,33,Math.PI,2*Math.PI); ctx.fill();
+  if(kind==='girl'){ctx.fillStyle=hair;ctx.fillRect(-34,-191,9,54);ctx.fillRect(25,-191,9,54);}
+  // face looking toward movement / secondary
+  const eyeY=-181, eyeX=dir*10;
+  if(blink){line(-18,-181,-7,-181,'#263247',3);line(7,-181,18,-181,'#263247',3)}
+  else {circle(-11,-181,3,'#263247');circle(11,-181,3,'#263247');}
+  if(s.mood==='surprised'){circle(0,-165,6,'#823c40')}
+  else if(s.mood==='sad'){ctx.strokeStyle='#823c40';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-158,10,Math.PI,2*Math.PI);ctx.stroke()}
+  else {ctx.strokeStyle='#823c40';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-171,10,0,Math.PI);ctx.stroke()}
+  if(talking){
+    ctx.fillStyle='#7e3440';ctx.beginPath();ctx.ellipse(0,-164,7,4+Math.abs(Math.sin(t*12))*3,0,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+function animal(x,ground,t,s,kind,dir=1,seed=0){
+  const dog=kind==='dog', move=s.action==='walk'||s.action==='run', fast=s.action==='run';
+  const cycle=t*(fast?15:8.5), step=move?Math.sin(cycle):0, bob=move?Math.abs(step)*3:Math.sin(t*2+seed)*2;
+  const fur=dog?'#c8945b':'#aaa5b8', dark=dog?'#86552e':'#858097';
+  ctx.save();ctx.translate(x,ground-bob);ctx.scale(dir,1);
+  ctx.save();ctx.scale(1,.3);circle(0,4,52,'rgba(0,0,0,.16)');ctx.restore();
+  ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(0,-49,54,36,0,0,Math.PI*2);ctx.fill();
+  line(-32,-33,-35+step*15,0,fur,16);line(29,-33,33-step*15,0,fur,16);
+  line(-44,-57,-70,-80+Math.sin(t*8)*8,fur,12);
+  circle(38,-90,33,fur);
+  ctx.fillStyle=dark;ctx.beginPath();
+  if(dog){ctx.ellipse(15,-108,13,29,-.3,0,Math.PI*2);ctx.ellipse(60,-107,13,29,.3,0,Math.PI*2)}
+  else{ctx.moveTo(12,-107);ctx.lineTo(17,-139);ctx.lineTo(37,-117);ctx.moveTo(46,-117);ctx.lineTo(68,-139);ctx.lineTo(68,-102)}ctx.fill();
+  const blink=blinkState(t,seed+.4);
+  if(blink){line(23,-95,32,-95,'#1f2937',3);line(43,-95,52,-95,'#1f2937',3)}
+  else{circle(27,-95,4,'#1f2937');circle(50,-95,4,'#1f2937');}
+  circle(39,-80,5,'#1f2937');
+  if(s.action==='talk'){ctx.fillStyle='#7a3440';ctx.beginPath();ctx.ellipse(39,-72,7,3+Math.abs(Math.sin(t*12))*3,0,0,Math.PI*2);ctx.fill()}
+  ctx.restore();
+}
+function draw(t=0){
+  let s=scenes[selected]; if(!s)return;
+  ctx.clearRect(0,0,W,H); background(s.background,t);
+  let duration=Math.max(1,s.duration), p=Math.min(1,t/duration);
+  const move=['walk','run'].includes(s.action);
+  const actionX=move?120+610*p:350;
+  const secondMention=s.second!=='none';
+  let secondX=secondMention?735:735;
+  if(secondMention && (s.action==='run'||/correu|caminhou|andou/i.test(s.text||''))){secondX=560+Math.sin(t*1.2)*12}
+  let targetX=actionX;
+  let camera=0;
+  if(move) camera=Math.max(0,(actionX-500)*.22);
+  if(secondMention && /encontr|aceno|acenar|brinc|falou|disse/i.test(s.text||'')) camera=Math.max(0,(actionX-420)*.12);
+  ctx.save();ctx.translate(-camera,0);
+  const ground=s.background==='city'?475:410;
+  // secondary gets a small independent life loop
+  if(secondMention){
+    const secAction=/correu|corre/.test(norm(s.text)) && (s.actor==='dog'||s.actor==='cat')?'run':'idle';
+    const sec={...s,action:secAction,mood:s.mood};
+    if(s.second==='dog'||s.second==='cat') animal(secondX,ground,t,sec,s.second,secondX<targetX?1:-1,3);
+    else human(secondX,ground,t,sec,s.second,secondX<targetX?1:-1,3);
+  }
+  const dir=(s.action==='walk'||s.action==='run')?1:(secondMention && targetX>secondX?-1:1);
+  if(s.actor==='dog'||s.actor==='cat') animal(targetX,ground,t,s,s.actor,dir,1);
+  else human(targetX,ground,t,s,s.actor,dir,1);
+  // small foreground particles for movement
+  if(move){for(let i=0;i<5;i++){let px=targetX-30-i*18-(t*35%18),py=ground-3+(i%2)*3;circle(px,py,2,'rgba(255,255,255,.35)')}}
+  ctx.restore();
+  let text=s.text||'';
+  if(text){let lines=wrap(text,57),h=lines.length*25+24;ctx.fillStyle='rgba(255,255,255,.96)';ctx.beginPath();ctx.roundRect(90,H-h-13,W-180,h,16);ctx.fill();ctx.fillStyle='#17243b';ctx.textAlign='center';ctx.font='bold 21px system-ui';lines.forEach((l,i)=>ctx.fillText(l,W/2,H-h+18+i*25));ctx.textAlign='start'}
+}
 function wrap(text,n){let words=text.split(/\s+/),lines=[''];for(let w of words){let i=lines.length-1;if((lines[i]+' '+w).length>n&&lines[i])lines.push(w);else lines[i]+=(lines[i]?' ':'')+w}return lines.slice(0,4)}
 $('generate').onclick=generate;$('generatePlay').onclick=()=>{if(generate())play()};$('play').onclick=play;$('pause').onclick=()=>{if(playing){paused=!paused;if(!paused){last=performance.now();raf=requestAnimationFrame(tick)}say(paused?'⏸️ Pausado':'▶️ Reproduzindo...')}};$('stop').onclick=()=>{stop();draw();say('⏹️ Parado')};$('add').onclick=()=>{stop();scenes.push({...scenes[selected],text:'Nova cena'});selected=scenes.length-1;sync()};$('remove').onclick=()=>{if(scenes.length===1){say('⚠️ Mantenha pelo menos uma cena.');return}stop();scenes.splice(selected,1);selected=Math.min(selected,scenes.length-1);sync()};for(let [id,key] of [['line','text'],['actor','actor'],['second','second'],['background','background'],['action','action'],['mood','mood'],['duration','duration']])$(id).addEventListener('input',()=>{let v=$(id).value;scenes[selected][key]=key==='duration'?Math.max(2,Math.min(20,Number(v)||5)):v;timeline();draw(elapsed)});
-$('save').onclick=()=>{try{localStorage.setItem('animadorWebV4',JSON.stringify(scenes));say('💾 Projeto salvo neste navegador!')}catch(e){say('❌ Não foi possível salvar')}};
+$('save').onclick=()=>{try{localStorage.setItem('animadorWebV5',JSON.stringify(scenes));say('💾 Projeto salvo neste navegador!')}catch(e){say('❌ Não foi possível salvar')}};
 function validate(data){if(!Array.isArray(data)||!data.length||data.length>100)throw Error('Projeto inválido');return data.map(o=>{let s={...make(),...o};s.duration=Math.max(2,Math.min(20,Number(s.duration)||5));for(let k of ['text','actor','second','background','action','mood'])s[k]=String(s[k]).slice(0,k==='text'?600:30);return s})}
-$('load').onclick=()=>{try{let data=localStorage.getItem('animadorWebV4');if(!data){say('⚠️ Nenhum projeto V4 salvo.');return}stop();scenes=validate(JSON.parse(data));selected=0;sync();say('📂 Projeto carregado!')}catch(e){say('❌ Erro ao carregar projeto')}};
+$('load').onclick=()=>{try{let data=localStorage.getItem('animadorWebV5');if(!data){say('⚠️ Nenhum projeto V4 salvo.');return}stop();scenes=validate(JSON.parse(data));selected=0;sync();say('📂 Projeto carregado!')}catch(e){say('❌ Erro ao carregar projeto')}};
 $('download').onclick=()=>{let blob=new Blob([JSON.stringify(scenes,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='animador-v4-projeto.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-$('record').onclick=()=>{if(!canvas.captureStream||!window.MediaRecorder){say('⚠️ Seu navegador não permite gravar vídeo.');return}if(recorder&&recorder.state==='recording'){say('🔴 Gravação em andamento');return}let stream=canvas.captureStream(30),type=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(x=>MediaRecorder.isTypeSupported(x));if(!type){say('⚠️ Gravação WebM não suportada neste navegador');return}recordChunks=[];try{recorder=new MediaRecorder(stream,{mimeType:type});recorder.ondataavailable=e=>{if(e.data.size)recordChunks.push(e.data)};recorder.onstop=()=>{let blob=new Blob(recordChunks,{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='animacao-v4.webm';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);stream.getTracks().forEach(x=>x.stop());say('🎬 Vídeo gerado!')};stop();selected=0;sync();recorder.start();play();say('🔴 Gravando vídeo...')}catch(e){say('❌ Não foi possível iniciar a gravação')}};
+$('record').onclick=()=>{if(!canvas.captureStream||!window.MediaRecorder){say('⚠️ Seu navegador não permite gravar vídeo.');return}if(recorder&&recorder.state==='recording'){say('🔴 Gravação em andamento');return}let stream=canvas.captureStream(30),type=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(x=>MediaRecorder.isTypeSupported(x));if(!type){say('⚠️ Gravação WebM não suportada neste navegador');return}recordChunks=[];try{recorder=new MediaRecorder(stream,{mimeType:type});recorder.ondataavailable=e=>{if(e.data.size)recordChunks.push(e.data)};recorder.onstop=()=>{let blob=new Blob(recordChunks,{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='animacao-v5.webm';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);stream.getTracks().forEach(x=>x.stop());say('🎬 Vídeo gerado!')};stop();selected=0;sync();recorder.start();play();say('🔴 Gravando vídeo...')}catch(e){say('❌ Não foi possível iniciar a gravação')}};
 sync();
 </script></body></html>
